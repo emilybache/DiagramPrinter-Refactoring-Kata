@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiagramPrinter", "DiagramPrinter\DiagramPrinter.csproj", "{4C183571-5935-493E-A2E5-EAF0513DE422}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiagramPrinterTests", "DiagramPrinterTests\DiagramPrinterTests.csproj", "{885F70C3-F495-4CBF-B8C8-71FB4235CA64}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4C183571-5935-493E-A2E5-EAF0513DE422}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C183571-5935-493E-A2E5-EAF0513DE422}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C183571-5935-493E-A2E5-EAF0513DE422}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C183571-5935-493E-A2E5-EAF0513DE422}.Release|Any CPU.Build.0 = Release|Any CPU
+		{885F70C3-F495-4CBF-B8C8-71FB4235CA64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{885F70C3-F495-4CBF-B8C8-71FB4235CA64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{885F70C3-F495-4CBF-B8C8-71FB4235CA64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{885F70C3-F495-4CBF-B8C8-71FB4235CA64}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
