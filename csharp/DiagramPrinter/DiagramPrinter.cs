@@ -42,10 +42,10 @@ public class DiagramPrinter
                 targetFilename += ".xls";
             return diagram.FlowchartDataAsSpreadsheet().CopyFile(info.FullFilename, targetFilename, true);
         }
-        // imagine lots more code here to deal with other types of document
-        
-        return false;
+        // default case - print to a physical printer
+        return new DiagramPhysicalPrinter().DoPrint(diagram, info, GetTargetFilename(folder, filename));
     }
+
 
     private static string GetTargetFilename(string? folder, string? filename)
     {
