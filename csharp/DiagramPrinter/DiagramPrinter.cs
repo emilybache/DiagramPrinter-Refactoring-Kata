@@ -28,7 +28,7 @@ public class DiagramPrinter
             return false;
         }
 
-        var info = new DiagramMetadata(ref diagram);
+        var info = new DiagramMetadata(diagram);
         if (info.FileType == "PDF")
         {
             var targetFilename = GetTargetFilename(folder, filename);
