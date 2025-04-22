@@ -1,3 +1,7 @@
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("DiagramPrinterTests")]
+
 namespace DiagramPrinter;
 
 public class PrinterDriverFactory
@@ -12,13 +16,15 @@ public class PrinterDriverFactory
             {
                 _instance = new PrinterDriverFactory();
             }
+
             return _instance;
         }
-        private set => _instance = value;
+        // for unit tests
+        internal set => _instance = value;
     }
 
-    public Document CreateDriverForPrint()
+    public virtual DiagramPrintDriver CreateDriverForPrint()
     {
-        return new Document();
+        return new DiagramPrintDriver();
     }
 }

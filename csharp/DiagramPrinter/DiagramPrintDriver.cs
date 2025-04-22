@@ -1,6 +1,6 @@
 namespace DiagramPrinter;
 
-public class Document
+public class DiagramPrintDriver
 {
     private IDiagram _diagram;
 
@@ -14,8 +14,8 @@ public class Document
         this._diagram = null;
     }
 
-    public bool PrintTo(PhysicalPrinter physicalPrinter)
+    public virtual bool PrintTo(PhysicalPrinter physicalPrinter)
     {
-        return true;
+        throw new NotImplementedException("Can't call this from a unit test");
     }
 }

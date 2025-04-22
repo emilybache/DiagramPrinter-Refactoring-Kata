@@ -58,6 +58,8 @@ public class DiagramPrinterTests
         var spyPrinter = new SpyPhysicalPrinter(spy);
         var spyQueue = new SpyQueue(spy, spyPrinter);
         var printer = new DiagramPhysicalPrinter(spyPrinter, spyQueue);
+        var printerDriverFactory = new PrinterDriverFactoryTestAdapter(spy);
+        PrinterDriverFactory.Instance = printerDriverFactory;
         IDiagram diagram = null;
         var diagramWrapper = new SpyPrintableDiagram(spy, "filename", "PDF", true);
         DiagramMetadata info = new DiagramMetadataTestAdapter("filename", "Physical", true);
@@ -69,6 +71,7 @@ public class DiagramPrinterTests
         Assert.AreEqual(@"
 Added metadata to print queue
 Start Document
+DiagramPrintDriver is printing to physical printer
 End Document
 ", spy.ToString());
     }
@@ -157,4 +160,35 @@ public class DiagramMetadataTestAdapter : DiagramMetadata
     }
     
     
+}
+
+public class PrinterDriverFactoryTestAdapter : PrinterDriverFactory
+{
+    private readonly StringBuilder _stringBuilder;
+
+    public PrinterDriverFactoryTestAdapter(StringBuilder stringBuilder)
+    {
+        _stringBuilder = stringBuilder;
+    }
+
+    public override DiagramPrintDriver CreateDriverForPrint()
+    {
+        return new SpyDiagramPrintDriver(_stringBuilder);
+    }
+}
+
+public class SpyDiagramPrintDriver : DiagramPrintDriver
+{
+    private readonly StringBuilder _stringBuilder;
+
+    public SpyDiagramPrintDriver(StringBuilder stringBuilder)
+    {
+        _stringBuilder = stringBuilder;
+    }
+
+    public override bool PrintTo(PhysicalPrinter physicalPrinter)
+    {
+        _stringBuilder.AppendLine("DiagramPrintDriver is printing to physical printer");
+        return true;
+    }
 }
