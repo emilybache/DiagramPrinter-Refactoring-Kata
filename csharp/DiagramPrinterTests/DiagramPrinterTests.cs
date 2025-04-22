@@ -28,7 +28,7 @@ public class DiagramPrinterTests
     {
         var spy = new StringBuilder();
         var printer = new DiagramPrinter.DiagramPrinter();
-        var diagram = new SpyDiagram(spy, "filename", DiagramPrinter.DiagramPrinter.Pdf, true);
+        var diagram = new SpyPrintableDiagram(spy, "filename", DiagramPrinter.DiagramPrinter.Pdf, true);
         
         var result = printer.PrintDiagram(diagram, "temp", "output.pdf");
         
@@ -42,7 +42,7 @@ public class DiagramPrinterTests
     {
         var spy = new StringBuilder();
         var printer = new DiagramPrinter.DiagramPrinter();
-        var diagram = new SpyDiagram(spy, "filename", DiagramPrinter.DiagramPrinter.Spreadsheet, true);
+        var diagram = new SpyPrintableDiagram(spy, "filename", DiagramPrinter.DiagramPrinter.Spreadsheet, true);
         
         var result = printer.PrintDiagram(diagram, "temp", "output.xls");
         
@@ -59,7 +59,7 @@ public class DiagramPrinterTests
         var spyQueue = new SpyQueue(spy, spyPrinter);
         var printer = new DiagramPhysicalPrinter(spyPrinter, spyQueue);
         IDiagram diagram = null;
-        var diagramWrapper = new SpyDiagram(spy, "filename", "PDF", true);
+        var diagramWrapper = new SpyPrintableDiagram(spy, "filename", "PDF", true);
         DiagramMetadata info = new DiagramMetadataTestAdapter("filename", "Physical", true);
         string filename = "random output filename";
         
@@ -113,7 +113,7 @@ public class SpyQueue : PrintQueue
     }
 }
 
-public class SpyDiagram : DiagramWrapper
+public class SpyPrintableDiagram : PrintableDiagram
 {
     private readonly StringBuilder _stringBuilder;
     private readonly string _fullFilename;
@@ -121,7 +121,7 @@ public class SpyDiagram : DiagramWrapper
     private readonly bool _fileAvailable;
     public string Spy { get; private set; } = "";
 
-    public SpyDiagram(StringBuilder stringBuilder, string fullFilename, string fileType, bool fileAvailable) : base(null)
+    public SpyPrintableDiagram(StringBuilder stringBuilder, string fullFilename, string fileType, bool fileAvailable) : base(null)
     {
         _stringBuilder = stringBuilder;
         _fullFilename = fullFilename;

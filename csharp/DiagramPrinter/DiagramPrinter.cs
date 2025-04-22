@@ -33,20 +33,18 @@ public class DiagramPrinter
         {
             return false;
         }
-
-        var diagramWrapper = new DiagramWrapper(diagram);
-
-        return PrintDiagram(diagramWrapper, folder, filename);
+        var printableDiagram = new PrintableDiagram(diagram);
+        return PrintDiagram(printableDiagram, folder, filename);
     }
 
-    public bool PrintDiagram(DiagramWrapper diagramWrapper, string? folder, string? filename)
+    public bool PrintDiagram(PrintableDiagram printableDiagram, string? folder, string? filename)
     {
-        var info = diagramWrapper.GetDiagramMetadata();
+        var info = printableDiagram.GetDiagramMetadata();
         if (info.FileType == Pdf)
         {
             var targetFilename = GetTargetFilename(folder, filename);
             _logger.LogInformation("Printing Pdf to file {targetFilename}", targetFilename);
-            var copySuccessful = diagramWrapper.PrintToFile(info.FullFilename, targetFilename);
+            var copySuccessful = printableDiagram.PrintToFile(info.FullFilename, targetFilename);
             return copySuccessful;
         }
 
@@ -56,12 +54,12 @@ public class DiagramPrinter
             if (!targetFilename.EndsWith(".xls"))
                 targetFilename += ".xls";
             _logger.LogInformation("Printing Excel to file {targetFilename}", targetFilename);
-            var copySuccessful = diagramWrapper.PrintToFile(info.FullFilename, targetFilename);
+            var copySuccessful = printableDiagram.PrintToFile(info.FullFilename, targetFilename);
             return copySuccessful;
         }
         // default case - print to a physical printer
         var diagramPhysicalPrinter = new DiagramPhysicalPrinter();
-        return diagramPhysicalPrinter.DoPrint(diagramWrapper, info, GetTargetFilename(folder, filename));
+        return diagramPhysicalPrinter.DoPrint(printableDiagram, info, GetTargetFilename(folder, filename));
     }
 
 

@@ -18,10 +18,10 @@ public class DiagramPhysicalPrinter
         this._printQueue = new PrintQueue(this._physicalPrinter);
     }
 
-    public bool DoPrint(DiagramWrapper diagram, DiagramMetadata info, string targetFilename)
+    public bool DoPrint(PrintableDiagram printableDiagram, DiagramMetadata info, string targetFilename)
     {
-        var printable = PrinterFactory.Instance.CreateItemForPrint();
-        printable.SetDiagram(diagram.Diagram);
+        var printerDriver = PrinterDriverFactory.Instance.CreateDriverForPrint();
+        printerDriver.SetDiagram(printableDiagram.Diagram);
 
         var data = new PrintMetadata(info.FileType);
         var mutex = new Mutex(false, "PhysicalPrinterMutex");
@@ -37,19 +37,19 @@ public class DiagramPhysicalPrinter
             }
             else if (_physicalPrinter.JobCount < 0)
             {
-                _logger.LogInformation("Physical Printer Has Negative Job Count - Printer Is Unavailable");
+                _logger.LogInformation("Physical Printer Unavailable Due to Job Count Inconsistency");
                 success = false;
             }
             else
             {
                 // Print the diagram using the Physical Printer
                 _printQueue.Add(data);
-                var summaryInformation = diagram.SummaryInformation();
+                var summaryInformation = printableDiagram.SummaryInformation();
                 _logger.LogInformation("Diagram Summary Information {summaryInformation}", summaryInformation);
                 var isSummary = summaryInformation.Length > 10;
                 if (_physicalPrinter.StartDocument(!isSummary, false, "DiagramPhysicalPrinter"))
                 {
-                    if (printable.PrintTo(_physicalPrinter))
+                    if (printerDriver.PrintTo(_physicalPrinter))
                     {
                         _logger.LogInformation("Physical Printer Successfully printed");
                         success = true;
@@ -65,7 +65,7 @@ public class DiagramPhysicalPrinter
                 if (File.Exists(data.Filename))
                 {
                     _logger.LogInformation("Saving backup of printed document as PDF to file {targetFilename}", targetFilename);
-                    diagram.PrintToFile(data.Filename, targetFilename);
+                    printableDiagram.PrintToFile(data.Filename, targetFilename);
                 }
             }
         }
@@ -77,7 +77,7 @@ public class DiagramPhysicalPrinter
         finally
         {
             mutex.ReleaseMutex();
-            printable.ReleaseDiagram();
+            printerDriver.ReleaseDiagram();
         }
 
         return success;

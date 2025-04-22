@@ -1,23 +1,23 @@
 namespace DiagramPrinter;
 
-public class PrinterFactory
+public class PrinterDriverFactory
 {
-    private static PrinterFactory _instance;
+    private static PrinterDriverFactory _instance;
 
-    public static PrinterFactory Instance
+    public static PrinterDriverFactory Instance
     {
         get
         {
             if (_instance == null)
             {
-                _instance = new PrinterFactory();
+                _instance = new PrinterDriverFactory();
             }
             return _instance;
         }
         private set => _instance = value;
     }
 
-    public Document CreateItemForPrint()
+    public Document CreateDriverForPrint()
     {
         return new Document();
     }

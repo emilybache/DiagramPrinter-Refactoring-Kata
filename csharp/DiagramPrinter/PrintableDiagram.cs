@@ -1,11 +1,11 @@
 namespace DiagramPrinter;
 
-public class DiagramWrapper
+public class PrintableDiagram
 {
 
     public IDiagram Diagram { get; }
     
-    public DiagramWrapper(IDiagram diagram)
+    public PrintableDiagram(IDiagram diagram)
     {
         Diagram = diagram;
     }
