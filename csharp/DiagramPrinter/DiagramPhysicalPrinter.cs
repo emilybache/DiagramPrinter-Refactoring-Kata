@@ -23,10 +23,10 @@ public class DiagramPhysicalPrinter
         this._printQueue = new PrintQueue(this._physicalPrinter);
     }
 
-    public bool DoPrint(PrintableDiagram printableDiagram, DiagramMetadata info, string targetFilename)
+    public bool DoPrint(IDiagram diagram, DiagramMetadata info, string targetFilename)
     {
         var printerDriver = PrinterDriverFactory.Instance.CreateDriverForPrint();
-        printerDriver.SetDiagram(printableDiagram.Diagram);
+        printerDriver.SetDiagram(diagram);
 
         var data = new PrintMetadata(info.FileType);
         var mutex = new Mutex(false, "PhysicalPrinterMutex");
@@ -49,7 +49,7 @@ public class DiagramPhysicalPrinter
             {
                 // Print the diagram using the Physical Printer
                 _printQueue.Add(data);
-                var summaryInformation = printableDiagram.SummaryInformation();
+                var summaryInformation = diagram.SummaryInformation();
                 _logger.LogInformation("Diagram Summary Information {summaryInformation}", summaryInformation);
                 var isSummary = summaryInformation.Length > 10;
                 if (_physicalPrinter.StartDocument(!isSummary, false, "DiagramPhysicalPrinter"))
@@ -71,7 +71,7 @@ public class DiagramPhysicalPrinter
                 {
                     _logger.LogInformation("Saving backup of printed document as PDF to file {targetFilename}",
                         targetFilename);
-                    printableDiagram.PrintToFile(data.Filename, targetFilename);
+                    diagram.FlowchartAsPdf().CopyFile(data.Filename, targetFilename, true);
                 }
             }
         }

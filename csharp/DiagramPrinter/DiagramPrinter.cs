@@ -33,33 +33,23 @@ public class DiagramPrinter
         {
             return false;
         }
-        var printableDiagram = new PrintableDiagram(diagram);
-        return PrintDiagram(printableDiagram, folder, filename);
-    }
 
-    public bool PrintDiagram(PrintableDiagram printableDiagram, string? folder, string? filename)
-    {
-        var info = printableDiagram.GetDiagramMetadata();
+        var info = new DiagramMetadata(ref diagram);
         if (info.FileType == Pdf)
         {
             var targetFilename = GetTargetFilename(folder, filename);
-            _logger.LogInformation("Printing Pdf to file {targetFilename}", targetFilename);
-            var copySuccessful = printableDiagram.PrintToFile(info.FullFilename, targetFilename);
-            return copySuccessful;
+            return diagram.FlowchartAsPdf().CopyFile(info.FullFilename, targetFilename, true);
         }
-
+        
         if (info.FileType == Spreadsheet)
         {
             var targetFilename = GetTargetFilename(folder, filename);
             if (!targetFilename.EndsWith(".xls"))
                 targetFilename += ".xls";
-            _logger.LogInformation("Printing Excel to file {targetFilename}", targetFilename);
-            var copySuccessful = printableDiagram.PrintToFile(info.FullFilename, targetFilename);
-            return copySuccessful;
+            return diagram.FlowchartDataAsSpreadsheet().CopyFile(info.FullFilename, targetFilename, true);
         }
         // default case - print to a physical printer
-        var diagramPhysicalPrinter = new DiagramPhysicalPrinter();
-        return diagramPhysicalPrinter.DoPrint(printableDiagram, info, GetTargetFilename(folder, filename));
+        return new DiagramPhysicalPrinter().DoPrint(diagram, info, GetTargetFilename(folder, filename));
     }
 
 

@@ -6,7 +6,7 @@ public class DiagramMetadata
     public string FileType { get; protected set; }
     public bool FileAvailable { get; protected set; }
 
-    public DiagramMetadata(IDiagram idiagram)
+    public DiagramMetadata(ref IDiagram idiagram)
     {
         FullFilename = idiagram.Name() + "_" + idiagram.SerialNumber();
         FileType = idiagram.Name().Contains("Flowchart") ? "PDF" : "Spreadsheet";
@@ -15,6 +15,6 @@ public class DiagramMetadata
 
     protected DiagramMetadata()
     {
-        // for subclass for testing
+        // enable subclassing for testing purposes
     }
 }
