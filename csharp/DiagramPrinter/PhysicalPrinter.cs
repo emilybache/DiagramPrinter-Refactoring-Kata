@@ -7,11 +7,11 @@ public class PhysicalPrinter
 
     public virtual bool StartDocument(bool isSummary, bool isPdf, string name)
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("Can't call this from a unit test");
     }
 
     public virtual void EndDocument()
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("Can't call this from a unit test");
     }
 }

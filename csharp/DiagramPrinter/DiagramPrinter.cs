@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 namespace DiagramPrinter;
 
 /**
- * This is the class you'd like to get under test so you can change it safely.
+ * This is a class you'd like to get under test so you can change it safely.
  */
 public class DiagramPrinter
 {

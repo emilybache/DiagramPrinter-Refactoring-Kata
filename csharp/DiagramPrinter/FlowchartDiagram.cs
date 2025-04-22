@@ -15,36 +15,36 @@ public class FlowchartDiagram : IDiagram
 
     public string Name()
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("Can't call this from a unit test");
     }
 
     public string SerialNumber()
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("Can't call this from a unit test");
     }
 
     public bool IsDisposed()
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("Can't call this from a unit test");
     }
 
     public PdfDocument FlowchartAsPdf()
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("Can't call this from a unit test");
     }
 
     public SpreadsheetDocument FlowchartDataAsSpreadsheet()
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("Can't call this from a unit test");
     }
 
     public string SummaryInformation()
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("Can't call this from a unit test");
     }
 
     public PngDocument FlowchartThumbnail()
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("Can't call this from a unit test");
     }
 }

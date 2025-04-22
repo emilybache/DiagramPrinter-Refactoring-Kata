@@ -15,6 +15,6 @@ public sealed class SpreadsheetDocument
 
     public bool CopyFile(string infoFullFilename, string targetFilename, bool overwrite)
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("Can't call this from a unit test");
     }
 }

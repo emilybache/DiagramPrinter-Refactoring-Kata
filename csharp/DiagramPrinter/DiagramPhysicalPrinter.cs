@@ -1,5 +1,10 @@
 namespace DiagramPrinter;
+
 using Microsoft.Extensions.Logging;
+
+/**
+ * This is a class you'd like to get under test so you can change it safely.
+ */
 public class DiagramPhysicalPrinter
 {
     private readonly PhysicalPrinter _physicalPrinter;
@@ -29,7 +34,7 @@ public class DiagramPhysicalPrinter
         try
         {
             mutex.WaitOne();
-            
+
             if (!_physicalPrinter.IsAvailable)
             {
                 _logger.LogInformation("Physical Printer Unavailable");
@@ -64,7 +69,8 @@ public class DiagramPhysicalPrinter
                 // save a backup of the printed document as pdf
                 if (File.Exists(data.Filename))
                 {
-                    _logger.LogInformation("Saving backup of printed document as PDF to file {targetFilename}", targetFilename);
+                    _logger.LogInformation("Saving backup of printed document as PDF to file {targetFilename}",
+                        targetFilename);
                     printableDiagram.PrintToFile(data.Filename, targetFilename);
                 }
             }

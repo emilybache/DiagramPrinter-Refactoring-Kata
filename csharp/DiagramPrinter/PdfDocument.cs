@@ -14,6 +14,6 @@ public sealed class PdfDocument
 
     public bool CopyFile(string fromPath, string targetPath, bool failIfAlreadyExists)
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException("Can't call this from a unit test");
     }
 }
