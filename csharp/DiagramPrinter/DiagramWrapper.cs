@@ -4,9 +4,7 @@ public class DiagramWrapper
 {
 
     public IDiagram Diagram { get; }
-
-
-
+    
     public DiagramWrapper(IDiagram diagram)
     {
         Diagram = diagram;
@@ -20,5 +18,10 @@ public class DiagramWrapper
     public virtual bool PrintToFile(string fromFilename, string targetFilename)
     {
         return Diagram.FlowchartAsPdf().CopyFile(fromFilename, targetFilename, true);
+    }
+
+    public virtual string SummaryInformation()
+    {
+        return Diagram.SummaryInformation();
     }
 }

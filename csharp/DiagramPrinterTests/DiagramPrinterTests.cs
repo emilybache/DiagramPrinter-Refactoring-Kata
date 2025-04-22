@@ -34,15 +34,50 @@ public class DiagramPrinterTests
     [Test]
     public void PrintingPhysicalDoc()
     {
-        var printer = new DiagramPhysicalPrinter();
+        var spyPrinter = new SpyPhysicalPrinter();
+        var spyQueue = new SpyQueue(spyPrinter);
+        var printer = new DiagramPhysicalPrinter(spyPrinter, spyQueue);
         IDiagram diagram = null;
+        
         var diagramWrapper = new TestableDiagramWrapper("filename", "PDF", true);
         DiagramMetadata info = new DiagramMetadataTestAdapter("filename", "Physical", true);
         string filename = "random output filename";
         var result = printer.DoPrint(diagramWrapper, info, filename);
-        Assert.IsFalse(result);
+        Assert.IsTrue(result);
     }
 
+}
+
+public class SpyPhysicalPrinter : PhysicalPrinter
+{
+    public string Spy { get; private set; } = "";
+
+    public SpyPhysicalPrinter()
+    {
+        IsAvailable = true;
+    }
+
+    public override bool StartDocument(bool isSummary, bool isPdf, string name)
+    {
+        Spy += "Start Document";
+        return true;
+    }
+
+    public override void EndDocument()
+    {
+        Spy += "End Document";
+
+    }
+}
+
+public class SpyQueue : PrintQueue
+{
+    public string Spy { get; private set; } = "";
+
+    public SpyQueue(PhysicalPrinter physicalPrinter) : base(physicalPrinter)
+    {
+        
+    }
 }
 
 public class TestableDiagramWrapper : DiagramWrapper
@@ -62,6 +97,11 @@ public class TestableDiagramWrapper : DiagramWrapper
     public override DiagramMetadata GetDiagramMetadata()
     {
         return new DiagramMetadataTestAdapter(_fullFilename, _fileType, _fileAvailable);
+    }
+
+    public override string SummaryInformation()
+    {
+        return "summary information";
     }
 
     public override bool PrintToFile(string toFilename, string targetFilename)

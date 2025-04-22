@@ -5,6 +5,11 @@ public class DiagramPhysicalPrinter
     private readonly PhysicalPrinter _physicalPrinter;
     private readonly PrintQueue _printQueue;
 
+    public DiagramPhysicalPrinter(PhysicalPrinter physicalPrinter, PrintQueue printQueue)
+    {
+        this._physicalPrinter = physicalPrinter;
+        this._printQueue = printQueue;
+    }
     public DiagramPhysicalPrinter()
     {
         this._physicalPrinter = new PhysicalPrinter();
@@ -22,13 +27,12 @@ public class DiagramPhysicalPrinter
         {
             mutex.WaitOne();
 
-            if (PrintDocumentWithSynchronization(data, diagram.Diagram, printable))
+            if (PrintDocumentWithSynchronization(data, diagram, printable))
             {
                 // save a backup of the printed document as pdf
                 if (File.Exists(data.Filename))
                 {
-                    diagram.PrintToFile(data.Filename, targetFilename); 
-                    diagram.Diagram.FlowchartAsPdf().CopyFile(data.Filename, targetFilename, true);
+                    diagram.PrintToFile(data.Filename, targetFilename);
                 }
             }
         }
@@ -42,10 +46,10 @@ public class DiagramPhysicalPrinter
             printable.ReleaseDiagram();
         }
         
-        return false;
+        return true;
     }
 
-    private bool PrintDocumentWithSynchronization(PrintMetadata data, IDiagram diagram, Document document)
+    private bool PrintDocumentWithSynchronization(PrintMetadata data, DiagramWrapper diagram, Document document)
     {
         var success = false;
         var isSummary = diagram.SummaryInformation().Length > 10;
