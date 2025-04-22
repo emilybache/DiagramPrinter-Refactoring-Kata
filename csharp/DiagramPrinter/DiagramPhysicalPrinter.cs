@@ -37,11 +37,12 @@ public class DiagramPhysicalPrinter
             }
             else if (_physicalPrinter.JobCount < 0)
             {
-                _logger.LogInformation("Physical Printer Job Count Unavailable");
+                _logger.LogInformation("Physical Printer Has Negative Job Count - Printer Is Unavailable");
                 success = false;
             }
             else
             {
+                // Print the diagram using the Physical Printer
                 _printQueue.Add(data);
                 var summaryInformation = diagram.SummaryInformation();
                 _logger.LogInformation("Diagram Summary Information {summaryInformation}", summaryInformation);
