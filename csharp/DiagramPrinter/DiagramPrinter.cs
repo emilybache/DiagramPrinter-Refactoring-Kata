@@ -28,22 +28,31 @@ public class DiagramPrinter
             return false;
         }
 
-        var info = new DiagramMetadata(diagram);
+        var diagramWrapper = new DiagramWrapper(diagram);
+
+        return PrintDiagram2(diagramWrapper, folder, filename);
+    }
+
+    public bool PrintDiagram2(DiagramWrapper diagramWrapper, string? folder = null, string? filename = null)
+    {
+        var info = diagramWrapper.GetDiagramMetadata();
         if (info.FileType == "PDF")
         {
             var targetFilename = GetTargetFilename(folder, filename);
-            return diagram.FlowchartAsPdf().CopyFile(info.FullFilename, targetFilename, true);
+            var copySuccessful = diagramWrapper.PrintToFile(info.FullFilename, targetFilename);
+            return copySuccessful;
         }
-        
+
         if (info.FileType == "Spreadsheet")
         {
             var targetFilename = GetTargetFilename(folder, filename);
             if (!targetFilename.EndsWith(".xls"))
                 targetFilename += ".xls";
-            return diagram.FlowchartDataAsSpreadsheet().CopyFile(info.FullFilename, targetFilename, true);
+            var copySuccessful = diagramWrapper.PrintToFile(info.FullFilename, targetFilename);
+            return copySuccessful;
         }
         // default case - print to a physical printer
-        return new DiagramPhysicalPrinter().DoPrint(diagram, info, GetTargetFilename(folder, filename));
+        return new DiagramPhysicalPrinter().DoPrint(diagramWrapper, info, GetTargetFilename(folder, filename));
     }
 
 

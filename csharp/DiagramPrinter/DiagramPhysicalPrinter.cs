@@ -11,10 +11,10 @@ public class DiagramPhysicalPrinter
         this._printQueue = new PrintQueue(this._physicalPrinter);
     }
 
-    public bool DoPrint(IDiagram diagram, DiagramMetadata info, string targetFilename)
+    public bool DoPrint(DiagramWrapper diagram, DiagramMetadata info, string targetFilename)
     {
         var printable = PrinterFactory.Instance.CreateItemForPrint();
-        printable.SetDiagram(diagram);
+        printable.SetDiagram(diagram.Diagram);
 
         var data = new PrintMetadata(info.FileType);
         var mutex = new Mutex(false, "PhysicalPrinterMutex");
@@ -22,12 +22,13 @@ public class DiagramPhysicalPrinter
         {
             mutex.WaitOne();
 
-            if (PrintDocumentWithSynchronization(data, diagram, printable))
+            if (PrintDocumentWithSynchronization(data, diagram.Diagram, printable))
             {
                 // save a backup of the printed document as pdf
                 if (File.Exists(data.Filename))
                 {
-                    diagram.FlowchartAsPdf().CopyFile(data.Filename, targetFilename, true);
+                    diagram.PrintToFile(data.Filename, targetFilename); 
+                    diagram.Diagram.FlowchartAsPdf().CopyFile(data.Filename, targetFilename, true);
                 }
             }
         }
