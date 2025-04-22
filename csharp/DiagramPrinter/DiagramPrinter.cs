@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+
 namespace DiagramPrinter;
 
 /**
@@ -5,6 +7,10 @@ namespace DiagramPrinter;
  */
 public class DiagramPrinter
 {
+    public const string Spreadsheet = "Spreadsheet";
+    public const string Pdf = "PDF";
+
+    private readonly ILogger<DiagramPrinter> _logger = LoggingProvider.CreateLogger<DiagramPrinter>();
     public bool PrintSummary(IDiagram? diagram, string language, ref string summaryText)
     {
         if (diagram == null)
@@ -30,29 +36,32 @@ public class DiagramPrinter
 
         var diagramWrapper = new DiagramWrapper(diagram);
 
-        return PrintDiagram2(diagramWrapper, folder, filename);
+        return PrintDiagram(diagramWrapper, folder, filename);
     }
 
-    public bool PrintDiagram2(DiagramWrapper diagramWrapper, string? folder = null, string? filename = null)
+    public bool PrintDiagram(DiagramWrapper diagramWrapper, string? folder, string? filename)
     {
         var info = diagramWrapper.GetDiagramMetadata();
-        if (info.FileType == "PDF")
+        if (info.FileType == Pdf)
         {
             var targetFilename = GetTargetFilename(folder, filename);
+            _logger.LogInformation("Printing Pdf to file {targetFilename}", targetFilename);
             var copySuccessful = diagramWrapper.PrintToFile(info.FullFilename, targetFilename);
             return copySuccessful;
         }
 
-        if (info.FileType == "Spreadsheet")
+        if (info.FileType == Spreadsheet)
         {
             var targetFilename = GetTargetFilename(folder, filename);
             if (!targetFilename.EndsWith(".xls"))
                 targetFilename += ".xls";
+            _logger.LogInformation("Printing Excel to file {targetFilename}", targetFilename);
             var copySuccessful = diagramWrapper.PrintToFile(info.FullFilename, targetFilename);
             return copySuccessful;
         }
         // default case - print to a physical printer
-        return new DiagramPhysicalPrinter().DoPrint(diagramWrapper, info, GetTargetFilename(folder, filename));
+        var diagramPhysicalPrinter = new DiagramPhysicalPrinter();
+        return diagramPhysicalPrinter.DoPrint(diagramWrapper, info, GetTargetFilename(folder, filename));
     }
 
 

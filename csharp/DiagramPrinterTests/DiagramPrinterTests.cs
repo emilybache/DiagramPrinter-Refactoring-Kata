@@ -27,7 +27,7 @@ public class DiagramPrinterTests
     {
         var printer = new DiagramPrinter.DiagramPrinter();
         var diagramWrapper = new TestableDiagramWrapper("filename", "PDF", true);
-        var result = printer.PrintDiagram2(diagramWrapper);
+        var result = printer.PrintDiagram(diagramWrapper, "temp", "output.pdf");
         Assert.IsTrue(result);
         Assert.AreEqual("(Filename=filename, folderValid=True)", diagramWrapper.Spy);
     }

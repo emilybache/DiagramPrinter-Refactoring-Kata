@@ -1,15 +1,17 @@
 namespace DiagramPrinter;
-
+using Microsoft.Extensions.Logging;
 public class DiagramPhysicalPrinter
 {
     private readonly PhysicalPrinter _physicalPrinter;
     private readonly PrintQueue _printQueue;
+    private readonly ILogger<DiagramPhysicalPrinter> _logger = LoggingProvider.CreateLogger<DiagramPhysicalPrinter>();
 
     public DiagramPhysicalPrinter(PhysicalPrinter physicalPrinter, PrintQueue printQueue)
     {
         this._physicalPrinter = physicalPrinter;
         this._printQueue = printQueue;
     }
+
     public DiagramPhysicalPrinter()
     {
         this._physicalPrinter = new PhysicalPrinter();
@@ -23,72 +25,60 @@ public class DiagramPhysicalPrinter
 
         var data = new PrintMetadata(info.FileType);
         var mutex = new Mutex(false, "PhysicalPrinterMutex");
+        var success = false;
         try
         {
             mutex.WaitOne();
+            
+            if (!_physicalPrinter.IsAvailable)
+            {
+                _logger.LogInformation("Physical Printer Unavailable");
+                success = false;
+            }
+            else if (_physicalPrinter.JobCount < 0)
+            {
+                _logger.LogInformation("Physical Printer Job Count Unavailable");
+                success = false;
+            }
+            else
+            {
+                _printQueue.Add(data);
+                var summaryInformation = diagram.SummaryInformation();
+                _logger.LogInformation("Diagram Summary Information {summaryInformation}", summaryInformation);
+                var isSummary = summaryInformation.Length > 10;
+                if (_physicalPrinter.StartDocument(!isSummary, false, "DiagramPhysicalPrinter"))
+                {
+                    if (printable.PrintTo(_physicalPrinter))
+                    {
+                        _logger.LogInformation("Physical Printer Successfully printed");
+                        success = true;
+                    }
 
-            if (PrintDocumentWithSynchronization(data, diagram, printable))
+                    _physicalPrinter.EndDocument();
+                }
+            }
+
+            if (success)
             {
                 // save a backup of the printed document as pdf
                 if (File.Exists(data.Filename))
                 {
+                    _logger.LogInformation("Saving backup of printed document as PDF to file {targetFilename}", targetFilename);
                     diagram.PrintToFile(data.Filename, targetFilename);
                 }
             }
         }
         catch (Exception e)
         {
-            return false;
+            _logger.LogError(e, "Failed to print document");
+            success = false;
         }
         finally
         {
             mutex.ReleaseMutex();
             printable.ReleaseDiagram();
         }
-        
-        return true;
-    }
-
-    private bool PrintDocumentWithSynchronization(PrintMetadata data, DiagramWrapper diagram, Document document)
-    {
-        var success = false;
-        var isSummary = diagram.SummaryInformation().Length > 10;
-        try
-        {
-            success = PrintDocument(data, isSummary, document);
-        }
-        catch (Exception e)
-        {
-            success = false;
-        }
 
         return success;
-    }
-
-    private bool PrintDocument(PrintMetadata data, bool isSummary, Document document)
-    {
-        if (!_physicalPrinter.IsAvailable)
-        {
-            return false;
-        }
-
-        if (_physicalPrinter.JobCount < 0)
-        {
-            return false;
-        }
-
-        var printSuccess = false;
-        _printQueue.Add(data);
-        if (_physicalPrinter.StartDocument(!isSummary, false, "DiagramPhysicalPrinter"))
-        {
-            if (document.PrintTo(_physicalPrinter))
-            {
-                printSuccess = true;
-            }
-
-            _physicalPrinter.EndDocument();
-        }
-
-        return printSuccess;
     }
 }
