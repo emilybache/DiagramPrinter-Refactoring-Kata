@@ -11,7 +11,7 @@ public class PrintQueue
         this._items = new List<PrintMetadata>();
     }
 
-    public void Add(PrintMetadata data)
+    public virtual void Add(PrintMetadata data)
     {
         this._items.Add(data);
     }
