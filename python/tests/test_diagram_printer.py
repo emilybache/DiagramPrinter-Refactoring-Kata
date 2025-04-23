@@ -39,7 +39,6 @@ def test_printing_spreadsheet_document_succeeds(spy):
     assert spy[0].strip() == "Print to File (Filename=filename, folderValid=True)"
 
 def test_printing_physical_document_succeeds(spy):
-    spy.append("")  # Mimic spy starting empty
     spy_printer = SpyPhysicalPrinter(spy)
     spy_queue = SpyQueue(spy, spy_printer)
     printer = DiagramPhysicalPrinter(spy_printer, spy_queue)
@@ -52,10 +51,8 @@ def test_printing_physical_document_succeeds(spy):
     result = printer.do_print(diagram_wrapper, info, filename)
 
     assert result
-    expected_output = """
-Added metadata to print queue
-Start Document
-DiagramPrintDriver is printing to physical printer
-End Document
-""".strip()
-    assert "\n".join(spy).strip() == expected_output
+    expected_output = ["Added metadata to print queue",
+                       "Start Document",
+                       "DiagramPrintDriver is printing to physical printer",
+                       "End Document"]
+    assert spy == expected_output
