@@ -28,26 +28,22 @@ class DiagramPrinter:
         if diagram is None:
             return False
 
-        printable_diagram = PrintableDiagram(diagram)
-        return self._print_diagram(printable_diagram, folder, filename)
-
-    def _print_diagram(self, printable_diagram : PrintableDiagram, folder, filename):
-        info = printable_diagram.get_diagram_metadata()
+        info = DiagramMetadata(diagram)
         target_filename = self._get_target_filename(folder, filename)
 
         if info.file_type == self.PDF:
             self._logger.info(f"Printing PDF to file {target_filename}")
-            return printable_diagram.print_to_file(info.full_filename, target_filename)
+            return diagram.flowchart_as_pdf().copy_file(info.full_filename, target_filename, True)
 
         if info.file_type == self.SPREADSHEET:
             if not target_filename.endswith(".xls"):
                 target_filename += ".xls"
             self._logger.info(f"Printing Excel to file {target_filename}")
-            return printable_diagram.print_to_file(info.full_filename, target_filename)
+            return diagram.flowchart_as_pdf().copy_file(info.full_filename, target_filename, True)
 
         # default case - print to a physical printer
         diagram_physical_printer = DiagramPhysicalPrinter()
-        return diagram_physical_printer.do_print(printable_diagram, info, target_filename)
+        return diagram_physical_printer.do_print(diagram, info, target_filename)
 
     @staticmethod
     def _get_target_filename(folder, filename):
@@ -62,9 +58,9 @@ class DiagramPhysicalPrinter:
         self._print_queue = print_queue or PrintQueue(self._physical_printer)
         self._logger = logging.getLogger("DiagramPhysicalPrinter")
 
-    def do_print(self, printable_diagram, info, target_filename):
+    def do_print(self, diagram : FlowchartDiagram, info, target_filename):
         printer_driver = PrinterDriverFactory.get_instance().create_driver_for_print()
-        printer_driver.set_diagram(printable_diagram.diagram)
+        printer_driver.set_diagram(diagram)
 
         data = PrintMetadata(info.file_type)
         mutex = threading.Lock()
@@ -78,7 +74,7 @@ class DiagramPhysicalPrinter:
             else:
                 # Print the diagram using the Physical Printer
                 self._print_queue.add(data)
-                summary_information = printable_diagram.summary_information()
+                summary_information = diagram.summary_information()
                 self._logger.info(f"Diagram Summary Information {summary_information}")
 
                 is_summary = len(summary_information) > 10
@@ -92,7 +88,7 @@ class DiagramPhysicalPrinter:
                     # save a backup of the printed document as pdf
                     if os.path.exists(data.filename):
                         self._logger.info(f"Saving backup of printed document as PDF to file {target_filename}")
-                        printable_diagram.print_to_file(data.filename, target_filename)
+                        diagram.flowchart_as_pdf().copy_file(data.filename, target_filename, True)
 
         printer_driver.release_diagram()
         return success
