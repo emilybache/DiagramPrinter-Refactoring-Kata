@@ -2,9 +2,10 @@ import os
 import threading
 import logging
 
-from documents import DiagramSummary, PrintableDiagram
+from documents import DiagramSummary, PrintableDiagram, FlowchartDiagram
 from printing import *
 
+# This is a class you'd like to get under test so you can change it safely.
 class DiagramPrinter:
     SPREADSHEET = "Spreadsheet"
     PDF = "PDF"
@@ -23,14 +24,14 @@ class DiagramPrinter:
         summary_text = summary.export()
         return True, summary_text
 
-    def print_diagram(self, diagram, folder=None, filename=None):
+    def print_diagram(self, diagram : FlowchartDiagram, folder : str =None, filename : str = None):
         if diagram is None:
             return False
 
         printable_diagram = PrintableDiagram(diagram)
         return self._print_diagram(printable_diagram, folder, filename)
 
-    def _print_diagram(self, printable_diagram, folder, filename):
+    def _print_diagram(self, printable_diagram : PrintableDiagram, folder, filename):
         info = printable_diagram.get_diagram_metadata()
         target_filename = self._get_target_filename(folder, filename)
 
@@ -44,6 +45,7 @@ class DiagramPrinter:
             self._logger.info(f"Printing Excel to file {target_filename}")
             return printable_diagram.print_to_file(info.full_filename, target_filename)
 
+        # default case - print to a physical printer
         diagram_physical_printer = DiagramPhysicalPrinter()
         return diagram_physical_printer.do_print(printable_diagram, info, target_filename)
 
@@ -53,6 +55,7 @@ class DiagramPrinter:
         filename = filename or "tempfile.tmp"
         return os.path.join(folder, filename)
 
+# This is a class you'd like to get under test so you can change it safely.
 class DiagramPhysicalPrinter:
     def __init__(self, physical_printer=None, print_queue=None):
         self._physical_printer = physical_printer or PhysicalPrinter()
@@ -73,6 +76,7 @@ class DiagramPhysicalPrinter:
             elif self._physical_printer.job_count < 0:
                 self._logger.info("Physical Printer Unavailable Due to Job Count Inconsistency")
             else:
+                # Print the diagram using the Physical Printer
                 self._print_queue.add(data)
                 summary_information = printable_diagram.summary_information()
                 self._logger.info(f"Diagram Summary Information {summary_information}")
@@ -84,9 +88,11 @@ class DiagramPhysicalPrinter:
                         success = True
                     self._physical_printer.end_document()
 
-                if success and os.path.exists(data.filename):
-                    self._logger.info(f"Saving backup of printed document as PDF to file {target_filename}")
-                    printable_diagram.print_to_file(data.filename, target_filename)
+                if success:
+                    # save a backup of the printed document as pdf
+                    if os.path.exists(data.filename):
+                        self._logger.info(f"Saving backup of printed document as PDF to file {target_filename}")
+                        printable_diagram.print_to_file(data.filename, target_filename)
 
         printer_driver.release_diagram()
         return success
