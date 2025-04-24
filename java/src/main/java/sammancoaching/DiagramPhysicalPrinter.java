@@ -24,10 +24,10 @@ public class DiagramPhysicalPrinter {
         this.printQueue = new PrintQueue(this.physicalPrinter);
     }
 
-    public boolean doPrint(FlowchartDiagram diagram, DiagramMetadata info, String targetFilename) throws IOException {
+    public boolean doPrint(PrintableDiagram diagram, DiagramMetadata info, String targetFilename) throws IOException {
         PrinterDriverFactory factory = PrinterDriverFactory.getInstance();
         DiagramPrintDriver printerDriver = factory.createDriverForPrint();
-        printerDriver.setDiagram(diagram);
+        printerDriver.setDiagram(diagram.getDiagram());
 
         PrintMetadata data = new PrintMetadata(info.fileType);
         boolean success = false;
@@ -58,10 +58,10 @@ public class DiagramPhysicalPrinter {
 
             if (success) {
                 // Save a backup of the printed document as PDF
-                File file = new File(data.getFilename());
+                File file = data.getFile();
                 if (file.exists()) {
                     logger.info("Saving backup of printed document as PDF to file " + targetFilename);
-                    diagram.getFlowchartAsPdf().copyFile(data.getFilename(), targetFilename, true);
+                    diagram.printToFile(data.getFilename(), targetFilename);
                 }
             }
         } catch (Exception e) {
