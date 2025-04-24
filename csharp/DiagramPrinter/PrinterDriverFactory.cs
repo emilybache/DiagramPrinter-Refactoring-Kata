@@ -6,7 +6,7 @@ namespace DiagramPrinter;
 
 public class PrinterDriverFactory
 {
-    private static PrinterDriverFactory _instance;
+    private static PrinterDriverFactory? _instance;
 
     public static PrinterDriverFactory Instance
     {

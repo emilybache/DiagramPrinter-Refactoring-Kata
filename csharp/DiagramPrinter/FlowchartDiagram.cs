@@ -6,7 +6,7 @@ namespace DiagramPrinter;
  * This is the production class used for real.
  * The implementation is largely omitted here, imagine it is much bigger and more complex.
  */
-public class FlowchartDiagram : IDiagram
+public class FlowchartDiagram
 {
     public FlowchartDiagram()
     {
@@ -47,4 +47,6 @@ public class FlowchartDiagram : IDiagram
     {
         throw new NotImplementedException("Can't call this from a unit test");
     }
+    
+    // Imagine about 200 more methods here
 }

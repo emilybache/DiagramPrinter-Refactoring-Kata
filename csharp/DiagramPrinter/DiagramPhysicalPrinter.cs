@@ -23,7 +23,7 @@ public class DiagramPhysicalPrinter
         this._printQueue = new PrintQueue(this._physicalPrinter);
     }
 
-    public bool DoPrint(IDiagram diagram, DiagramMetadata info, string targetFilename)
+    public bool DoPrint(FlowchartDiagram diagram, DiagramMetadata info, string targetFilename)
     {
         var printerDriver = PrinterDriverFactory.Instance.CreateDriverForPrint();
         printerDriver.SetDiagram(diagram);

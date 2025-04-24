@@ -2,9 +2,9 @@ namespace DiagramPrinter;
 
 public class DiagramPrintDriver
 {
-    private IDiagram _diagram;
+    private FlowchartDiagram? _diagram;
 
-    public void SetDiagram(IDiagram diagram)
+    public void SetDiagram(FlowchartDiagram diagram)
     {
         this._diagram = diagram;
     }
