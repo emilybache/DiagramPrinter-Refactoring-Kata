@@ -6,11 +6,11 @@ public class DiagramMetadata
     public string FileType { get; protected set; }
     public bool FileAvailable { get; protected set; }
 
-    public DiagramMetadata(IDiagram idiagram)
+    public DiagramMetadata(FlowchartDiagram diagram)
     {
-        FullFilename = idiagram.Name() + "_" + idiagram.SerialNumber();
-        FileType = idiagram.Name().Contains("Flowchart") ? "PDF" : "Spreadsheet";
-        FileAvailable = !idiagram.IsDisposed();
+        FullFilename = diagram.Name() + "_" + diagram.SerialNumber();
+        FileType = diagram.Name().Contains("Flowchart") ? "PDF" : "Spreadsheet";
+        FileAvailable = !diagram.IsDisposed();
     }
 
     protected DiagramMetadata()

@@ -3,9 +3,9 @@ namespace DiagramPrinter;
 public class PrintableDiagram
 {
 
-    public IDiagram Diagram { get; }
+    public FlowchartDiagram Diagram { get; }
     
-    public PrintableDiagram(IDiagram diagram)
+    public PrintableDiagram(FlowchartDiagram diagram)
     {
         Diagram = diagram;
     }

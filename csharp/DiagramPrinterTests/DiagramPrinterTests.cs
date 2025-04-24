@@ -60,7 +60,7 @@ public class DiagramPrinterTests
         var printer = new DiagramPhysicalPrinter(spyPrinter, spyQueue);
         var printerDriverFactory = new PrinterDriverFactoryTestAdapter(spy);
         PrinterDriverFactory.Instance = printerDriverFactory;
-        IDiagram diagram = null;
+        FlowchartDiagram diagram = null;
         var diagramWrapper = new SpyPrintableDiagram(spy, "filename", "PDF", true);
         DiagramMetadata info = new DiagramMetadataTestAdapter("filename", "Physical", true);
         string filename = "random output filename";
