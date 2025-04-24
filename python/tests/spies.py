@@ -1,5 +1,5 @@
 from documents import PrintableDiagram
-from printing import PhysicalPrinter, PrintQueue, DiagramMetadata, PrinterDriverFactory, DiagramPrintDriver
+from printing import PhysicalPrinter, PrintQueue, DiagramPrintDriver
 
 
 class SpyPhysicalPrinter(PhysicalPrinter):
