@@ -1,6 +1,7 @@
 import pytest
 
-from diagram_printer import DiagramPrinter, DiagramPhysicalPrinter
+from diagram_printer import DiagramPrinter
+from physical_printer import DiagramPhysicalPrinter
 from printing import PrinterDriverFactory
 from spies import SpyPhysicalPrinter, SpyQueue, SpyPrintableDiagram, StubDiagramMetadata, \
     StubPrinterDriverFactory
