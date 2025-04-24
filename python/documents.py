@@ -1,5 +1,3 @@
-from printing import DiagramMetadata
-
 
 class DiagramSummary:
     def __init__(self, language):
@@ -18,6 +16,7 @@ class DiagramSummary:
     def export(self):
         # imagine a lot more detail and complexity here
         return self.contents
+
 
 #  This is the production code that is big and complex and hard to get into a unit test harness.
 #  Imagine it has far more methods than this.
@@ -45,6 +44,7 @@ class FlowchartDiagram:
 
     # imagine about 200 more methods defined here
 
+
 # This is the real production code class.
 #  The implementation is omitted here, imagine it is from a third party library
 #  which you can't change.
@@ -55,6 +55,7 @@ class PdfDocument:
     def copy_file(self, from_path, target_path, fail_if_already_exists):
         raise NotImplementedError("Can't call this from a unit test")
 
+
 class PngDocument:
     def __init__(self, filename):
         self._filename = filename
@@ -62,18 +63,6 @@ class PngDocument:
     def filename(self):
         return self._filename
 
-class PrintableDiagram:
-    def __init__(self, diagram):
-        self.diagram = diagram
-
-    def get_diagram_metadata(self):
-        return DiagramMetadata(self.diagram)
-
-    def print_to_file(self, from_filename, target_filename):
-        return self.diagram.flowchart_as_pdf().copy_file(from_filename, target_filename, True)
-
-    def summary_information(self):
-        return self.diagram.summary_information()
 
 # This is the real production code class.
 #  The implementation is omitted here, imagine it is from a third party library
@@ -84,3 +73,10 @@ class SpreadsheetDocument:
 
     def copy_file(self, info_full_filename, target_filename, overwrite):
         raise NotImplementedError("Can't call this from a unit test")
+
+
+class DiagramMetadata:
+    def __init__(self, idiagram):
+        self.full_filename = f"{idiagram.name()}_{idiagram.serial_number()}"
+        self.file_type = "PDF" if "Flowchart" in idiagram.name() else "Spreadsheet"
+        self.file_available = not idiagram.is_disposed()

@@ -2,8 +2,9 @@ import os
 import threading
 import logging
 
-from documents import DiagramSummary, PrintableDiagram, FlowchartDiagram
-from printing import *
+from documents import DiagramSummary, FlowchartDiagram, DiagramMetadata
+from printing import PhysicalPrinter, PrintQueue, PrinterDriverFactory, PrintMetadata
+
 
 # This is a class you'd like to get under test so you can change it safely.
 class DiagramPrinter:
@@ -24,7 +25,7 @@ class DiagramPrinter:
         summary_text = summary.export()
         return True, summary_text
 
-    def print_diagram(self, diagram : FlowchartDiagram, folder : str =None, filename : str = None):
+    def print_diagram(self, diagram: FlowchartDiagram, folder: str = None, filename: str = None):
         if diagram is None:
             return False
 
@@ -51,6 +52,7 @@ class DiagramPrinter:
         filename = filename or "tempfile.tmp"
         return os.path.join(folder, filename)
 
+
 # This is a class you'd like to get under test so you can change it safely.
 class DiagramPhysicalPrinter:
     def __init__(self, physical_printer=None, print_queue=None):
@@ -58,7 +60,7 @@ class DiagramPhysicalPrinter:
         self._print_queue = print_queue or PrintQueue(self._physical_printer)
         self._logger = logging.getLogger("DiagramPhysicalPrinter")
 
-    def do_print(self, diagram : FlowchartDiagram, info, target_filename):
+    def do_print(self, diagram: FlowchartDiagram, info, target_filename):
         printer_driver = PrinterDriverFactory.get_instance().create_driver_for_print()
         printer_driver.set_diagram(diagram)
 
