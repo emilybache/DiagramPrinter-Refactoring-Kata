@@ -82,6 +82,10 @@ class SpyPhysicalPrinter extends PhysicalPrinter {
     public SpyPhysicalPrinter(StringBuilder spy) {
         this.spy = spy;
         this.isAvailable = true;
+        tonerLevels.put(Toner.Black, 100);
+        tonerLevels.put(Toner.Cyan, 100);
+        tonerLevels.put(Toner.Magenta, 100);
+        tonerLevels.put(Toner.Yellow, 100);
     }
 
     @Override

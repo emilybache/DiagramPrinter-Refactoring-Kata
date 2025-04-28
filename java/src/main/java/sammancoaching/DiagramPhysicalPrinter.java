@@ -35,7 +35,12 @@ public class DiagramPhysicalPrinter {
         try {
             mutex.lock();
 
-            if (!physicalPrinter.isAvailable()) {
+            if (!physicalPrinter.isAvailable() || !(
+                    physicalPrinter.getTonerLevelPercentage(Toner.Black) > 0 &&
+                    physicalPrinter.getTonerLevelPercentage(Toner.Cyan) > 0 &&
+                    physicalPrinter.getTonerLevelPercentage(Toner.Magenta) > 0 &&
+                    physicalPrinter.getTonerLevelPercentage(Toner.Yellow) > 0
+            )) {
                 logger.info("Physical Printer Unavailable");
             } else if (physicalPrinter.getJobCount() < 0) {
                 logger.info("Physical Printer Unavailable Due to Job Count Inconsistency");
