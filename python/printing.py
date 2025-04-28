@@ -1,3 +1,4 @@
+import enum
 import os
 
 from documents import FlowchartDiagram
@@ -7,6 +8,16 @@ class PhysicalPrinter:
     def __init__(self):
         self._is_available = False
         self._job_count = 0
+        self._toner_levels = {
+            Toner.Black: 0,
+            Toner.Cyan: 0,
+            Toner.Magenta: 0,
+            Toner.Yellow: 0
+        }
+
+    @property
+    def toner_levels(self):
+        return self._toner_levels
 
     @property
     def is_available(self):
@@ -72,3 +83,7 @@ class PrinterDriverFactory:
 
     def create_driver_for_print(self) -> DiagramPrintDriver:
         return DiagramPrintDriver()
+
+
+class Toner(enum.Enum):
+    Black, Cyan, Magenta, Yellow = range(4)

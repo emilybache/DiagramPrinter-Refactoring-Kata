@@ -1,5 +1,5 @@
 from documents import PrintableDiagram
-from printing import PhysicalPrinter, PrintQueue, DiagramPrintDriver
+from printing import PhysicalPrinter, PrintQueue, DiagramPrintDriver, Toner
 
 
 class SpyPhysicalPrinter(PhysicalPrinter):
@@ -7,6 +7,12 @@ class SpyPhysicalPrinter(PhysicalPrinter):
         super().__init__()
         self._spy = spy
         self._is_available = True
+        self._toner_levels = {
+            Toner.Black: 100,
+            Toner.Cyan: 100,
+            Toner.Magenta: 100,
+            Toner.Yellow: 100
+        }
 
     def start_document(self, is_summary, is_pdf, name):
         self._spy.append("Start Document")
