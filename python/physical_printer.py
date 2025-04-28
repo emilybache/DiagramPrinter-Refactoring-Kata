@@ -3,7 +3,7 @@ import os
 import threading
 
 from documents import FlowchartDiagram
-from printing import PhysicalPrinter, PrintQueue, PrinterDriverFactory, PrintMetadata
+from printing import PhysicalPrinter, PrintQueue, PrinterDriverFactory, PrintMetadata, Toner
 
 
 # This is a class you'd like to get under test so you can change it safely.
@@ -21,8 +21,11 @@ class DiagramPhysicalPrinter:
         mutex = threading.Lock()
         success = False
 
-        with mutex:
-            if not self._physical_printer.is_available:
+        with ((mutex)):
+            if not self._physical_printer.is_available or not (self._physical_printer.toner_levels[Toner.Black] > 0 and
+                                                               self._physical_printer.toner_levels[Toner.Cyan] > 0 and
+                                                               self._physical_printer.toner_levels[Toner.Magenta] > 0 and
+                                                               self._physical_printer.toner_levels[Toner.Yellow] > 0):
                 self._logger.info("Physical Printer Unavailable")
             elif self._physical_printer.job_count < 0:
                 self._logger.info("Physical Printer Unavailable Due to Job Count Inconsistency")

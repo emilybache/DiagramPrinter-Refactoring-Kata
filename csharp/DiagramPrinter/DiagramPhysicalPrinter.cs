@@ -35,7 +35,13 @@ public class DiagramPhysicalPrinter
         {
             mutex.WaitOne();
 
-            if (!_physicalPrinter.IsAvailable)
+            if (!_physicalPrinter.IsAvailable || !(
+                    _physicalPrinter.TonerLevels[Toner.Black] > 0 &&
+                    _physicalPrinter.TonerLevels[Toner.Cyan] > 0 &&
+                    _physicalPrinter.TonerLevels[Toner.Magenta] > 0 &&
+                    _physicalPrinter.TonerLevels[Toner.Yellow] > 0 
+                    )
+                )
             {
                 _logger.LogInformation("Physical Printer Unavailable");
                 success = false;
