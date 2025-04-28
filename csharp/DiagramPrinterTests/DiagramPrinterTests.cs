@@ -86,6 +86,10 @@ public class SpyPhysicalPrinter : PhysicalPrinter
     {
         _stringBuilder = stringBuilder;
         IsAvailable = true;
+        TonerLevels[Toner.Black] = 100;
+        TonerLevels[Toner.Cyan] = 100;
+        TonerLevels[Toner.Magenta] = 100;
+        TonerLevels[Toner.Yellow] = 100;
     }
 
     public override bool StartDocument(bool isSummary, bool isPdf, string name)
