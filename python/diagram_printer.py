@@ -39,7 +39,7 @@ class DiagramPrinter:
             if not target_filename.endswith(".xls"):
                 target_filename += ".xls"
             self._logger.info(f"Printing Excel to file {target_filename}")
-            return diagram.flowchart_as_pdf().copy_file(info.full_filename, target_filename, True)
+            return diagram.flowchart_data_as_spreadsheet().copy_file(info.full_filename, target_filename, True)
 
         # default case - print to a physical printer
         diagram_physical_printer = DiagramPhysicalPrinter()
