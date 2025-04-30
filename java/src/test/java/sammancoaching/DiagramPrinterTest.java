@@ -147,6 +147,11 @@ class SpyPrintableDiagram extends PrintableDiagram {
         return true;
     }
 
+    @Override
+    public boolean printSpreadsheetToFile(String toFilename, String targetFilename) {
+        return printToFile(toFilename, targetFilename);
+    }
+
     public static boolean isWellFormedUriString(String targetFilename) {
         try {
             new URI(targetFilename);

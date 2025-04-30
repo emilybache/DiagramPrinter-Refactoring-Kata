@@ -45,7 +45,7 @@ public class DiagramPrinter {
             if (!targetFilename.endsWith(".xls")) {
                 targetFilename += ".xls";
             }
-            return printableDiagram.printToFile(info.fullFilename, targetFilename);
+            return printableDiagram.printSpreadsheetToFile(info.fullFilename, targetFilename);
         }
 
         // Default case - print to a physical printer

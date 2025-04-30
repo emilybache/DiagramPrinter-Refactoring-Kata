@@ -19,6 +19,9 @@ public class PrintableDiagram {
     public boolean printToFile(String fromFilename, String targetFilename) {
         return diagram.getFlowchartAsPdf().copyFile(fromFilename, targetFilename, true);
     }
+    public boolean printSpreadsheetToFile(String fromFilename, String targetFilename) {
+        return diagram.getFlowchartDataAsSpreadsheet().copyFile(fromFilename, targetFilename, true);
+    }
 
     public String getSummaryInformation() {
         return diagram.getSummaryInformation();
