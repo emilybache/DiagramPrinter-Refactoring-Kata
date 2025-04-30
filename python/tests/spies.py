@@ -51,6 +51,9 @@ class SpyPrintableDiagram(PrintableDiagram):
         self._spy.append(f"Print to File (Filename={to_filename}, folderValid={folder_ok})")
         return True
 
+    def print_to_spreadsheet_file(self, to_filename, target_filename):
+        return self.print_to_file(to_filename, target_filename)
+
 
 class StubDiagramMetadata:
     def __init__(self, filename, filetype, available):

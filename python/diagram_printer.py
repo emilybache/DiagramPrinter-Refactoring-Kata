@@ -43,7 +43,7 @@ class DiagramPrinter:
             if not target_filename.endswith(".xls"):
                 target_filename += ".xls"
             self._logger.info(f"Printing Excel to file {target_filename}")
-            return printable_diagram.print_to_file(info.full_filename, target_filename)
+            return printable_diagram.print_to_spreadsheet_file(info.full_filename, target_filename)
 
         # default case - print to a physical printer
         diagram_physical_printer = DiagramPhysicalPrinter()

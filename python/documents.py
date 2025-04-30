@@ -73,6 +73,9 @@ class PrintableDiagram:
     def print_to_file(self, from_filename, target_filename):
         return self.diagram.flowchart_as_pdf().copy_file(from_filename, target_filename, True)
 
+    def print_to_spreadsheet_file(self, from_filename, target_filename):
+        return self.diagram.flowchart_data_as_spreadsheet().copy_file(from_filename, target_filename, True)
+
     def summary_information(self):
         return self.diagram.summary_information()
 
