@@ -54,7 +54,7 @@ public class DiagramPrinter
             if (!targetFilename.EndsWith(".xls"))
                 targetFilename += ".xls";
             _logger.LogInformation("Printing Excel to file {targetFilename}", targetFilename);
-            var copySuccessful = printableDiagram.PrintToFile(info.FullFilename, targetFilename);
+            var copySuccessful = printableDiagram.PrintToSpreadsheetFile(info.FullFilename, targetFilename);
             return copySuccessful;
         }
         // default case - print to a physical printer

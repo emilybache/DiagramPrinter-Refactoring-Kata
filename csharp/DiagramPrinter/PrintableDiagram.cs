@@ -18,6 +18,11 @@ public class PrintableDiagram
     public virtual bool PrintToFile(string fromFilename, string targetFilename)
     {
         return Diagram.FlowchartAsPdf().CopyFile(fromFilename, targetFilename, true);
+    }    
+    
+    public virtual bool PrintToSpreadsheetFile(string fromFilename, string targetFilename)
+    {
+        return Diagram.FlowchartDataAsSpreadsheet().CopyFile(fromFilename, targetFilename, true);
     }
 
     public virtual string SummaryInformation()

@@ -152,6 +152,11 @@ public class SpyPrintableDiagram : PrintableDiagram
         _stringBuilder.AppendLine($"Print to File (Filename={toFilename}, folderValid={folderOk})");
         return true;
     }
+
+    public override bool PrintToSpreadsheetFile(string fromFilename, string targetFilename)
+    {
+        return PrintToFile(fromFilename, targetFilename);
+    }
 }
 
 public class DiagramMetadataTestAdapter : DiagramMetadata
