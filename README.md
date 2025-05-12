@@ -14,14 +14,10 @@ There are two tests to start you off, but the coverage is low. The "PrintSummary
 
 This kata is to help you practice dependency breaking techniques and safe refactorings to get some awkward code under test.
 
-Additional Branches
+Refactoring challenge
 -------------------
 
-There are two additional branches you could look at in this repo:
-
-* with_tests - has unit tests and demonstrates several dependency-breaking techniques
-* sample_solution - decomposes the conditionals to improve readability
-
+If you'd prefer to skip the unit testing challenge and jump straight into improving the readability and structure of the code, there is an additional branch 'with_tests' that has some good unit tests. They are not completely comprehensive though so you will need to take care with your refactoring.
 
 Acknowledgements
 ----------------
