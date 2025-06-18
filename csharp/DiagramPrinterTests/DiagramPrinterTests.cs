@@ -12,6 +12,7 @@ public class DiagramPrinterTests
         var output = "";
         var result = printer.PrintSummary(null, "swedish", ref output);
         Assert.IsFalse(result);
+        Assert.That(output, Is.EqualTo(""));
     }
 
     [Test]
