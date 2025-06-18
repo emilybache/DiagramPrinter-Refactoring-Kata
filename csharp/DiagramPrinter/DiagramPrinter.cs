@@ -11,6 +11,7 @@ public class DiagramPrinter
     public const string Pdf = "PDF";
 
     private readonly ILogger<DiagramPrinter> _logger = LoggingProvider.CreateLogger<DiagramPrinter>();
+
     public bool PrintSummary(FlowchartDiagram? diagram, string language, ref string summaryText)
     {
         if (diagram == null)
@@ -40,7 +41,7 @@ public class DiagramPrinter
             var targetFilename = GetTargetFilename(folder, filename);
             return diagram.FlowchartAsPdf().CopyFile(info.FullFilename, targetFilename, true);
         }
-        
+
         if (info.FileType == Spreadsheet)
         {
             var targetFilename = GetTargetFilename(folder, filename);
@@ -48,6 +49,7 @@ public class DiagramPrinter
                 targetFilename += ".xls";
             return diagram.FlowchartDataAsSpreadsheet().CopyFile(info.FullFilename, targetFilename, true);
         }
+
         // default case - print to a physical printer
         return new DiagramPhysicalPrinter().DoPrint(diagram, info, GetTargetFilename(folder, filename));
     }
@@ -64,6 +66,7 @@ public class DiagramPrinter
         {
             filename = Path.GetTempFileName();
         }
+
         var targetFilename = Path.Join(folder, filename);
         return targetFilename;
     }
