@@ -35,7 +35,7 @@ public class DiagramPrinter
             return false;
         }
 
-        var info = new DiagramMetadata(ref diagram);
+        var info = new DiagramMetadata(diagram);
         if (info.FileType == Pdf)
         {
             var targetFilename = GetTargetFilename(folder, filename);
@@ -54,7 +54,56 @@ public class DiagramPrinter
         return new DiagramPhysicalPrinter().DoPrint(diagram, info, GetTargetFilename(folder, filename));
     }
 
+    public bool PrintReport(FlowchartDiagram diagram, string reportTemplate, string? folder = null,
+        string? filename = null, bool summarize = true)
+    {
+        FlowchartReport iRep = diagram.Report();
+        var targetFilename = GetTargetFilename(folder, filename);
+        _logger.LogInformation(message: $"Creating report for {diagram.Name()} to file {targetFilename}");
 
+        if (summarize)
+        {
+            diagram = diagram.Summary();
+            iRep.Close();
+            iRep = diagram.Report();
+            iRep.Open(true);
+            _logger.LogInformation(message: $"Switched to summary report for {diagram.Name()}");
+        }
+
+        if (!iRep.isOpen())
+        {
+            _logger.LogError("Failed to open report for writing.");
+            return false;
+        }
+
+        var data = new List<string>
+        {
+            diagram.Name(),
+            diagram.SerialNumber(),
+            diagram.FlowchartThumbnail().Filename()
+        };
+        
+        if (!ValidateReport(reportTemplate, data))
+        {
+            _logger.LogError("Failed to validate report template.");
+            return false;
+        }
+        if (summarize)
+        {
+            data.Add(diagram.SummaryInformation());
+            iRep.OpenWithContents(reportTemplate, data, true);
+        }
+        else
+        {
+            iRep.OpenWithContents(reportTemplate, data, false);
+        }
+
+        iRep.SaveToFile(targetFilename);
+        _logger.LogInformation("Report creation succeeded");
+        return true;
+    }
+
+    
     private static string GetTargetFilename(string? folder, string? filename)
     {
         if (folder == null)
@@ -69,5 +118,24 @@ public class DiagramPrinter
 
         var targetFilename = Path.Join(folder, filename);
         return targetFilename;
+    }
+
+    private bool ValidateReport(string template, List<string> substitutions)
+    {
+        try
+        {
+            CreateReport(template, substitutions.ToArray());
+            return true;
+        }
+        catch (System.FormatException e)
+        {
+            _logger.LogError("Report template did not match substitutions");
+            return false;
+        }
+    }
+
+    public string CreateReport(string template, object[] substitutions)
+    {
+        return string.Format(template, substitutions);
     }
 }

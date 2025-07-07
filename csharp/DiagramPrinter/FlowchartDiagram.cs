@@ -49,4 +49,41 @@ public class FlowchartDiagram
     }
     
     // Imagine about 200 more methods here
+    public FlowchartReport Report()
+    {
+        throw new NotImplementedException();
+    }
+
+    public FlowchartDiagram Summary()
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public class FlowchartReport
+{
+    public void Close()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Open(bool show)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool isOpen()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OpenWithContents(string reportTemplate, List<string> substitutions, bool readOnly)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SaveToFile(string targetFilename)
+    {
+        throw new NotImplementedException();
+    }
 }

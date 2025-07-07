@@ -6,7 +6,7 @@ public class DiagramMetadata
     public string FileType { get; protected set; }
     public bool FileAvailable { get; protected set; }
 
-    public DiagramMetadata(ref FlowchartDiagram idiagram)
+    public DiagramMetadata(FlowchartDiagram idiagram)
     {
         FullFilename = idiagram.Name() + "_" + idiagram.SerialNumber();
         FileType = idiagram.Name().Contains("Flowchart") ? "PDF" : "Spreadsheet";

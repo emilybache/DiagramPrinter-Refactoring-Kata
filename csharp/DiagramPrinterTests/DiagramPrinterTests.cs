@@ -22,4 +22,20 @@ public class DiagramPrinterTests
         var result = printer.PrintDiagram(null);
         Assert.IsFalse(result);
     }
+    
+    [Test]
+    public void PrintReport_SimpleTemplate_Succeeds()
+    {
+        var printer = new DiagramPrinter.DiagramPrinter();
+        var template = @"Report for FlowchartDiagram {0}";
+        var subsitutions = new object[]
+        {
+            "DiagramName",
+            
+        };
+        
+        var result = printer.CreateReport(template, subsitutions);
+        
+        Assert.That(result, Is.EqualTo("Report for FlowchartDiagram DiagramName"));
+    }
 }
