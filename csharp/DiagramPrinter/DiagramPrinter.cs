@@ -76,21 +76,11 @@ public class DiagramPrinter
             return false;
         }
 
-        var data = new List<string>
-        {
-            diagram.Name(),
-            diagram.SerialNumber(),
-            diagram.FlowchartThumbnail().Filename()
-        };
+        var data = diagram.ReportData();
         
         if (!ValidateReport(reportTemplate, data))
         {
             _logger.LogError("Failed to validate report template.");
-            FlowchartReportItems errors = diagram.ValidationProblems(reportTemplate, data);
-            foreach (var err in errors.AllErrors())
-            {
-                _logger.LogInformation(message: "error: {err}", err);
-            }
             return false;
         }
         if (summarize)
@@ -108,7 +98,7 @@ public class DiagramPrinter
         return true;
     }
 
-    
+
     private static string GetTargetFilename(string? folder, string? filename)
     {
         if (folder == null)
@@ -125,7 +115,7 @@ public class DiagramPrinter
         return targetFilename;
     }
 
-    private bool ValidateReport(string template, List<string> substitutions)
+    private bool ValidateReport(string template, FlowchartReportItems substitutions)
     {
         try
         {

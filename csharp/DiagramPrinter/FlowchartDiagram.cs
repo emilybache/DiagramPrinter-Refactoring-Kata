@@ -64,18 +64,36 @@ public class FlowchartDiagram
     {
         throw new NotImplementedException();
     }
+
+    public FlowchartReportItems ReportData()
+    {
+        return new FlowchartReportItems(this.Name(), this.SerialNumber(), this.FlowchartThumbnail().Filename());
+    }
 }
 
 public class FlowchartReportItems
 {
-    public FlowchartReportItems()
+    private List<string> _data = new List<string>();
+    
+    public FlowchartReportItems(string name, string serialNumber, string filename)
     {
+        _data = new List<string>
+        {
+            name,
+            serialNumber,
+            filename
+        };
         throw new AuthenticationException("you can't construct this in a unit test");
     }
 
-    public IEnumerable<string> AllErrors()
+    public void Add(string summaryInformation)
     {
-        throw new NotImplementedException();
+        _data.Add(summaryInformation);
+    }
+
+    public object[] ToArray()
+    {
+        return _data.ToArray();
     }
 }
 
@@ -96,7 +114,7 @@ public class FlowchartReport
         throw new NotImplementedException();
     }
 
-    public void OpenWithContents(string reportTemplate, List<string> substitutions, bool readOnly)
+    public void OpenWithContents(string reportTemplate, FlowchartReportItems substitutions, bool readOnly)
     {
         throw new NotImplementedException();
     }
