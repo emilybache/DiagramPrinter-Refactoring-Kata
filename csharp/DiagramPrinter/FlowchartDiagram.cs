@@ -1,4 +1,5 @@
-﻿using System.Security.Authentication;
+﻿using System.Collections;
+using System.Security.Authentication;
 
 namespace DiagramPrinter;
 
@@ -55,6 +56,24 @@ public class FlowchartDiagram
     }
 
     public FlowchartDiagram Summary()
+    {
+        throw new NotImplementedException();
+    }
+
+    public FlowchartReportItems ValidationProblems(string reportTemplate, List<string> data)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public class FlowchartReportItems
+{
+    public FlowchartReportItems()
+    {
+        throw new AuthenticationException("you can't construct this in a unit test");
+    }
+
+    public IEnumerable<string> AllErrors()
     {
         throw new NotImplementedException();
     }

@@ -53,13 +53,13 @@ public class DiagramPrinter
         // default case - print to a physical printer
         return new DiagramPhysicalPrinter().DoPrint(diagram, info, GetTargetFilename(folder, filename));
     }
-
+    
     public bool PrintReport(FlowchartDiagram diagram, string reportTemplate, string? folder = null,
         string? filename = null, bool summarize = true)
     {
         FlowchartReport iRep = diagram.Report();
         var targetFilename = GetTargetFilename(folder, filename);
-        _logger.LogInformation(message: $"Creating report for {diagram.Name()} to file {targetFilename}");
+        _logger.LogInformation(message: "Creating report for {name} to file {targetFilename}", diagram.Name(), targetFilename);
 
         if (summarize)
         {
@@ -67,7 +67,7 @@ public class DiagramPrinter
             iRep.Close();
             iRep = diagram.Report();
             iRep.Open(true);
-            _logger.LogInformation(message: $"Switched to summary report for {diagram.Name()}");
+            _logger.LogInformation(message: "Switched to summary report for {name}", diagram.Name());
         }
 
         if (!iRep.isOpen())
@@ -86,6 +86,11 @@ public class DiagramPrinter
         if (!ValidateReport(reportTemplate, data))
         {
             _logger.LogError("Failed to validate report template.");
+            FlowchartReportItems errors = diagram.ValidationProblems(reportTemplate, data);
+            foreach (var err in errors.AllErrors())
+            {
+                _logger.LogInformation(message: "error: {err}", err);
+            }
             return false;
         }
         if (summarize)

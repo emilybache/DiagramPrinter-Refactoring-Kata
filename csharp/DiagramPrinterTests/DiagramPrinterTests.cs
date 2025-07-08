@@ -23,6 +23,7 @@ public class DiagramPrinterTests
         Assert.IsFalse(result);
     }
     
+    // TODO: write tests for PrintReport too
     [Test]
     public void PrintReport_SimpleTemplate_Succeeds()
     {
@@ -31,7 +32,6 @@ public class DiagramPrinterTests
         var subsitutions = new object[]
         {
             "DiagramName",
-            
         };
         
         var result = printer.CreateReport(template, subsitutions);
