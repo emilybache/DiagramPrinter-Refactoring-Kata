@@ -69,6 +69,16 @@ public class FlowchartDiagram
     {
         return new FlowchartReportItems(this.Name(), this.SerialNumber(), this.FlowchartThumbnail().Filename());
     }
+
+    public List<DiagramPage> PagesData()
+    {
+        // fake implementation
+        return new List<DiagramPage>()
+        {
+            new DiagramPage(this.Name(), "page 1"),
+            new DiagramPage(this.Name(), "page 2"),
+        };
+    }
 }
 
 public class FlowchartReport

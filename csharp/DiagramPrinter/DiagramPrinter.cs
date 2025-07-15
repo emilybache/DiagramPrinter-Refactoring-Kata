@@ -62,20 +62,20 @@ public class DiagramPrinter
             return false;
         }
         
-        FlowchartReport iRep = diagram.Report();
+        FlowchartReport report = diagram.Report();
         var targetFilename = GetTargetFilename(folder, filename);
         _logger.LogInformation(message: "Creating report for {name} to file {targetFilename}", diagram.Name(), targetFilename);
 
         if (summarize)
         {
             diagram = diagram.Summary();
-            iRep.Close();
-            iRep = diagram.Report();
-            iRep.Open(true);
+            report.Close();
+            report = diagram.Report();
+            report.Open(true);
             _logger.LogInformation(message: "Switched to summary report for {name}", diagram.Name());
         }
 
-        if (!iRep.isOpen())
+        if (!report.isOpen())
         {
             _logger.LogError("Failed to open report for writing.");
             return false;
@@ -91,16 +91,38 @@ public class DiagramPrinter
         if (summarize)
         {
             data.Add(diagram.SummaryInformation());
-            iRep.OpenWithContents(reportTemplate, data, true);
+            report.OpenWithContents(reportTemplate, data, true);
         }
         else
         {
-            iRep.OpenWithContents(reportTemplate, data, false);
+            report.OpenWithContents(reportTemplate, data, false);
         }
 
-        iRep.SaveToFile(targetFilename);
+        report.SaveToFile(targetFilename);
         _logger.LogInformation("Report creation succeeded");
         return true;
+    }
+
+    public bool PrintPages(FlowchartDiagram? diagram, PagesBuilder builder)
+    {
+        if (diagram == null)
+        {
+            return false;
+        }
+        
+        FlowchartReportItems data = diagram.ReportData();
+        List<DiagramPage> pages = diagram.PagesData();
+
+        var report = new DiagramPagesReport();
+        var reportPages = new List<DiagramReportPage>();
+
+        foreach (var page in pages)
+        {
+            DiagramReportPage processedPage = builder.ProcessPage(page, data);
+            reportPages.Add(processedPage);
+        }
+
+        return builder.Apply(report, reportPages);
     }
 
 

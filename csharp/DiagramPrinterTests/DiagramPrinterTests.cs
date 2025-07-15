@@ -33,4 +33,12 @@ public class DiagramPrinterTests
         Assert.IsFalse(result);
     }
     
+    
+    [Test]
+    public void PrintPages_EmptyDocument_Fails()
+    {
+        var printer = new DiagramPrinter.DiagramPrinter();
+        var result = printer.PrintPages(null, new PagesBuilder());
+        Assert.IsFalse(result);
+    }
 }
