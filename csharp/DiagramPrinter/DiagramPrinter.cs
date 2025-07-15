@@ -54,9 +54,14 @@ public class DiagramPrinter
         return new DiagramPhysicalPrinter().DoPrint(diagram, info, GetTargetFilename(folder, filename));
     }
     
-    public bool PrintReport(FlowchartDiagram diagram, string reportTemplate, string? folder = null,
+    public bool PrintReport(FlowchartDiagram? diagram, string reportTemplate, string? folder = null,
         string? filename = null, bool summarize = true)
     {
+        if (diagram == null)
+        {
+            return false;
+        }
+        
         FlowchartReport iRep = diagram.Report();
         var targetFilename = GetTargetFilename(folder, filename);
         _logger.LogInformation(message: "Creating report for {name} to file {targetFilename}", diagram.Name(), targetFilename);

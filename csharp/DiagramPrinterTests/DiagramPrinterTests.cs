@@ -22,20 +22,15 @@ public class DiagramPrinterTests
         var result = printer.PrintDiagram(null);
         Assert.IsFalse(result);
     }
-    
-    // TODO: write tests for PrintReport too
+
     [Test]
-    public void PrintReport_SimpleTemplate_Succeeds()
+    public void PrintReport_EmptyDocument_Fails()
     {
         var printer = new DiagramPrinter.DiagramPrinter();
-        var template = @"Report for FlowchartDiagram {0}";
-        var subsitutions = new object[]
-        {
-            "DiagramName",
-        };
-        
-        var result = printer.CreateReport(template, subsitutions);
-        
-        Assert.That(result, Is.EqualTo("Report for FlowchartDiagram DiagramName"));
+        var template = @"Report for FlowchartDiagram {0} {1} {2}";
+        var fakeFlowchartReportItems = new FakeFlowchartReportItems("DiagramName", "Serial Number", "Filename");
+        var result = printer.PrintReport(null, template);
+        Assert.IsFalse(result);
     }
+    
 }

@@ -71,32 +71,6 @@ public class FlowchartDiagram
     }
 }
 
-public class FlowchartReportItems
-{
-    private List<string> _data = new List<string>();
-    
-    public FlowchartReportItems(string name, string serialNumber, string filename)
-    {
-        _data = new List<string>
-        {
-            name,
-            serialNumber,
-            filename
-        };
-        throw new AuthenticationException("you can't construct this in a unit test");
-    }
-
-    public void Add(string summaryInformation)
-    {
-        _data.Add(summaryInformation);
-    }
-
-    public object[] ToArray()
-    {
-        return _data.ToArray();
-    }
-}
-
 public class FlowchartReport
 {
     public void Close()
