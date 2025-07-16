@@ -11,11 +11,9 @@ public class DiagramPrinter
     public const string Pdf = "PDF";
 
     private readonly ILogger<DiagramPrinter> _logger = LoggingProvider.CreateLogger<DiagramPrinter>();
-    private FlowchartDiagram? diagram;
 
-    public bool PrintSummary(FlowchartDiagram? diagram_, string language, ref string summaryText)
+    public bool PrintSummary(FlowchartDiagram? diagram, string language, ref string summaryText)
     {
-        this.diagram = diagram_;
         if (diagram == null)
         {
             summaryText = "";
