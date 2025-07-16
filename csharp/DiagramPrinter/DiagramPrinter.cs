@@ -22,6 +22,11 @@ public class DiagramPrinter
             return false;
         }
 
+        return AppleSauce(language, out summaryText);
+    }
+
+    private bool AppleSauce(string language, out string summaryText)
+    {
         var summary = new DiagramSummary(language);
         summary.AddTitle(diagram.Name(), diagram.SerialNumber());
         summary.AddHeader(diagram.SummaryInformation());
