@@ -2,6 +2,27 @@ using Microsoft.Extensions.Logging;
 
 namespace DiagramPrinter;
 
+public class FlowchartDiagramWrapper
+{
+    public FlowchartDiagramWrapper(PngDocument flowchartThumbnail, string summaryInformation, string serialNumber, string name)
+    {
+        FlowchartThumbnail = flowchartThumbnail;
+        SummaryInformation = summaryInformation;
+        SerialNumber = serialNumber;
+        Name = name;
+    }
+
+    public static FlowchartDiagramWrapper Create(PngDocument flowchartThumbnail, string summaryInformation, string serialNumber, string name)
+    {
+        return new FlowchartDiagramWrapper(flowchartThumbnail, summaryInformation, serialNumber, name);
+    }
+
+    public PngDocument FlowchartThumbnail { get; }
+    public string SummaryInformation { get; }
+    public string SerialNumber { get; }
+    public string Name { get; }
+}
+
 /**
  * This is a class you'd like to get under test so you can change it safely.
  */
@@ -20,15 +41,11 @@ public class DiagramPrinter
             return false;
         }
 
-        return AppleSauce(diagram.FlowchartThumbnail(), diagram.SummaryInformation(), diagram.SerialNumber(), diagram.Name(), language, out summaryText);
-    }
-
-    private static bool AppleSauce(PngDocument flowchartThumbnail, string summaryInformation, string serialNumber, string name, string language, out string summaryText)
-    {
+        var flowchartDiagramWrapper = FlowchartDiagramWrapper.Create(diagram.FlowchartThumbnail(), diagram.SummaryInformation(), diagram.SerialNumber(), diagram.Name());
         var summary = new DiagramSummary(language);
-        summary.AddTitle(name, serialNumber);
-        summary.AddHeader(summaryInformation);
-        summary.AddImage(flowchartThumbnail);
+        summary.AddTitle(flowchartDiagramWrapper.Name, flowchartDiagramWrapper.SerialNumber);
+        summary.AddHeader(flowchartDiagramWrapper.SummaryInformation);
+        summary.AddImage(flowchartDiagramWrapper.FlowchartThumbnail);
         summaryText = summary.Export();
         return true;
     }
