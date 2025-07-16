@@ -22,15 +22,15 @@ public class DiagramPrinter
             return false;
         }
 
-        return AppleSauce(language, out summaryText);
+        return AppleSauce(diagram.FlowchartThumbnail(), diagram.SummaryInformation(), diagram.SerialNumber(), diagram.Name(), language, out summaryText);
     }
 
-    private bool AppleSauce(string language, out string summaryText)
+    private static bool AppleSauce(PngDocument flowchartThumbnail, string summaryInformation, string serialNumber, string name, string language, out string summaryText)
     {
         var summary = new DiagramSummary(language);
-        summary.AddTitle(diagram.Name(), diagram.SerialNumber());
-        summary.AddHeader(diagram.SummaryInformation());
-        summary.AddImage(diagram.FlowchartThumbnail());
+        summary.AddTitle(name, serialNumber);
+        summary.AddHeader(summaryInformation);
+        summary.AddImage(flowchartThumbnail);
         summaryText = summary.Export();
         return true;
     }
