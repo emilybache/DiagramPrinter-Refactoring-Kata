@@ -1,3 +1,5 @@
+from reporting import FlowchartReportItems, DiagramPage
+
 
 class DiagramSummary:
     def __init__(self, language):
@@ -42,6 +44,28 @@ class FlowchartDiagram:
     def flowchart_thumbnail(self):
         raise NotImplementedError("Can't construct this in a unit test")
 
+    def report(self):
+        raise RuntimeError("Can't call this from a unit test")
+
+    def summary(self):
+        raise RuntimeError("Can't call this from a unit test")
+
+    def validation_problems(self, report_template: str, data: list[str]):
+        raise RuntimeError("Can't call this from a unit test")
+
+    def report_data(self):
+        return FlowchartReportItems(
+            self.name(),
+            self.serial_number(),
+            self.flowchart_thumbnail().filename
+        )
+
+    def pages_data(self) -> list['DiagramPage']:
+        # fake implementation
+        return [
+            DiagramPage(self.name(), "page 1"),
+            DiagramPage(self.name(), "page 2")
+        ]
     # imagine about 200 more methods defined here
 
 
