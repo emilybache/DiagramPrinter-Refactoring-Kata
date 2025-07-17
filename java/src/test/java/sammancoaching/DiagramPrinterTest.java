@@ -26,5 +26,22 @@ public class DiagramPrinterTest {
         boolean result = printer.printDiagram(null, null, null);
         assertFalse(result);
     }
+
+    @Test
+    public void printReport_EmptyDocument_Fails() {
+        DiagramPrinter printer = new DiagramPrinter();
+        String template = "Report for FlowchartDiagram %s %s %s";
+        FakeFlowchartReportItems fakeFlowchartReportItems = new FakeFlowchartReportItems("DiagramName", "Serial Number", "Filename");
+        boolean result = printer.printReport(null, template, null, null, false);
+        assertFalse(result);
+    }
+
+    @Test
+    public void printPages_EmptyDocument_Fails() {
+        DiagramPrinter printer = new DiagramPrinter();
+        boolean result = printer.printPages(null, new PagesBuilder());
+        assertFalse(result);
+    }
+
 }
 
