@@ -142,7 +142,7 @@ public class DiagramPrinter
         return targetFilename;
     }
 
-    private bool ValidateReport(string template, FlowchartReportItems substitutions)
+    public bool ValidateReport(string template, FlowchartReportItems substitutions)
     {
         try
         {
@@ -156,8 +156,9 @@ public class DiagramPrinter
         }
     }
 
-    public string CreateReport(string template, object[] substitutions)
+    private string CreateReport(string template, object[] substitutions)
     {
-        return string.Format(template, substitutions);
+        var report = string.Format(template, substitutions);
+        return report;
     }
 }

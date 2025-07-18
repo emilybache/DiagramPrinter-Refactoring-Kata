@@ -41,4 +41,16 @@ public class DiagramPrinterTests
         var result = printer.PrintPages(null, new PagesBuilder());
         Assert.IsFalse(result);
     }
+    
+    [Test]
+    public void ValidateReport_MatchingTemplate_Succeeds()
+    {
+        var printer = new DiagramPrinter.DiagramPrinter();
+        var template = @"Report for FlowchartDiagram {0} {1} {2}";
+        var fakeFlowchartReportItems = new FakeFlowchartReportItems("DiagramName", "Serial Number", "Filename");
+
+        var result = printer.ValidateReport(template, fakeFlowchartReportItems);
+        
+        Assert.That(result, Is.EqualTo(true));
+    }
 }

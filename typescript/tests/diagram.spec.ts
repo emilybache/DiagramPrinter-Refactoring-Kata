@@ -30,4 +30,18 @@ describe('DiagramPrinter', () => {
     const result = printer.printPages(null, new PagesBuilder());
     expect(result).toBe(false);
   });
+
+  test('validateReport succeeds with matching template', () => {
+    const template = 'Report for FlowchartDiagram %s %s %s';
+    const fakeFlowchartReportItems = new FakeFlowchartReportItems(
+      'DiagramName',
+      'Serial Number',
+      'Filename'
+    );
+
+    const result = printer['validateReport'](template, fakeFlowchartReportItems);
+
+    expect(result).toBe(true);
+  });
+
 });

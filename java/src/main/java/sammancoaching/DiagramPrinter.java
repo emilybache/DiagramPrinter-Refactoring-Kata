@@ -133,7 +133,7 @@ public class DiagramPrinter {
         return Paths.get(folder, filename).toString();
     }
 
-    private boolean validateReport(String template, FlowchartReportItems substitutions) {
+    public boolean validateReport(String template, FlowchartReportItems substitutions) {
         try {
             createReport(template, substitutions.toArray());
             return true;
@@ -143,7 +143,8 @@ public class DiagramPrinter {
         }
     }
 
-    public String createReport(String template, Object[] substitutions) {
-        return String.format(template, substitutions);
+    private String createReport(String template, Object[] substitutions) {
+        String report = String.format(template, substitutions);
+        return report;
     }
 }

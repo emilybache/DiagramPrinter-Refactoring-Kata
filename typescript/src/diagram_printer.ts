@@ -3,6 +3,7 @@ import * as os from 'os';
 import { DiagramSummary, FlowchartDiagram, DiagramMetadata } from './documents';
 import { DiagramPhysicalPrinter } from './physical_printer';
 import {DiagramPagesReport, DiagramReportPage, FlowchartReportItems, PagesBuilder} from "./reporting";
+import * as util from "util";
 
 
 class DiagramPrinter {
@@ -81,7 +82,7 @@ class DiagramPrinter {
 
     const data = diagram.reportData();
 
-    if (!this._validateReport(reportTemplate, data)) {
+    if (!this.validateReport(reportTemplate, data)) {
       console.error("Failed to validate report template.");
       return false;
     }
@@ -123,7 +124,7 @@ class DiagramPrinter {
     return path.join(targetFolder, targetFilename);
   }
 
-  private _validateReport(template: string, substitutions: FlowchartReportItems): boolean {
+  validateReport(template: string, substitutions: FlowchartReportItems): boolean {
     try {
       this.createReport(template, substitutions.toArray());
       return true;
@@ -134,9 +135,8 @@ class DiagramPrinter {
   }
 
   createReport(template: string, substitutions: any[]): string {
-    return template.replace(/\{(\d+)\}/g, (match, index) => {
-      return substitutions[parseInt(index)]?.toString() ?? match;
-    });
+    let report = util.format(template, ...substitutions);
+    return report;
   }
 }
 

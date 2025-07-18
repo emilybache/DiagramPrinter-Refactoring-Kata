@@ -27,3 +27,13 @@ def test_print_pages_empty_document_fails():
     printer = DiagramPrinter()
     result = printer.print_pages(None, PagesBuilder())
     assert not result
+
+
+def test_validate_report_matching_template_succeeds():
+    printer = DiagramPrinter()
+    template = "Report for FlowchartDiagram %s %s %s"
+    fake_flowchart_report_items = FakeFlowchartReportItems("DiagramName", "Serial Number", "Filename")
+
+    result = printer.validate_report(template, fake_flowchart_report_items)
+
+    assert result

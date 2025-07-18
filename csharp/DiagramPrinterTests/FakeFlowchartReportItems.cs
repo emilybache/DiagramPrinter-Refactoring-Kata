@@ -19,12 +19,12 @@ public class FakeFlowchartReportItems : FlowchartReportItems
         };
     }
 
-    public void Add(string summaryInformation)
+    public override void Add(string summaryInformation)
     {
         _data.Add(summaryInformation);
     }
 
-    public object[] ToArray()
+    public override object[] ToArray()
     {
         return _data.ToArray();
     }   

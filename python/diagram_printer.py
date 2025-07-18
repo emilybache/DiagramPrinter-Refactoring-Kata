@@ -104,13 +104,14 @@ class DiagramPrinter:
         filename = filename or "tempfile.tmp"
         return os.path.join(folder, filename)
 
-    def _validate_report(self, template: str, substitutions: 'FlowchartReportItems') -> bool:
+    def validate_report(self, template: str, substitutions: 'FlowchartReportItems') -> bool:
         try:
-            self.create_report(template, substitutions.to_array())
+            self._create_report(template, substitutions.to_array())
             return True
         except ValueError as e:
             self._logger.warning("Report template did not match substitutions")
             return False
 
-    def create_report(self, template: str, substitutions: list) -> str:
-        return template.format(*substitutions)
+    def _create_report(self, template: str, substitutions: list) -> str:
+        report = template % tuple(substitutions)
+        return report

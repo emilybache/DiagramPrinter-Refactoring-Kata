@@ -2,13 +2,11 @@ package sammancoaching;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DiagramPrinterTest {
 
@@ -43,5 +41,15 @@ public class DiagramPrinterTest {
         assertFalse(result);
     }
 
+    @Test
+    public void validateReport_MatchingTemplate_Succeeds() {
+        DiagramPrinter printer = new DiagramPrinter();
+        String template = "Report for FlowchartDiagram %s %s %s";
+        FakeFlowchartReportItems fakeFlowchartReportItems = new FakeFlowchartReportItems("DiagramName", "Serial Number", "Filename");
+
+        boolean result = printer.validateReport(template, fakeFlowchartReportItems);
+
+        assertTrue(result);
+    }
 }
 
