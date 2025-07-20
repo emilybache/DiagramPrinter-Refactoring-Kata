@@ -11,7 +11,6 @@ public class DiagramPrinter
     public const string Pdf = "PDF";
 
     private readonly ILogger<DiagramPrinter> _logger = LoggingProvider.CreateLogger<DiagramPrinter>();
-
     public bool PrintSummary(FlowchartDiagram? diagram, string language, ref string summaryText)
     {
         if (diagram == null)
@@ -34,12 +33,19 @@ public class DiagramPrinter
         {
             return false;
         }
+        var printableDiagram = new PrintableDiagram(diagram);
+        return PrintDiagram(printableDiagram, folder, filename);
+    }
 
-        var info = new DiagramMetadata(diagram);
+    public bool PrintDiagram(PrintableDiagram printableDiagram, string? folder, string? filename)
+    {
+        var info = printableDiagram.GetDiagramMetadata();
         if (info.FileType == Pdf)
         {
             var targetFilename = GetTargetFilename(folder, filename);
-            return diagram.FlowchartAsPdf().CopyFile(info.FullFilename, targetFilename, true);
+            _logger.LogInformation("Printing Pdf to file {targetFilename}", targetFilename);
+            var copySuccessful = printableDiagram.PrintToFile(info.FullFilename, targetFilename);
+            return copySuccessful;
         }
 
         if (info.FileType == Spreadsheet)
@@ -47,11 +53,13 @@ public class DiagramPrinter
             var targetFilename = GetTargetFilename(folder, filename);
             if (!targetFilename.EndsWith(".xls"))
                 targetFilename += ".xls";
-            return diagram.FlowchartDataAsSpreadsheet().CopyFile(info.FullFilename, targetFilename, true);
+            _logger.LogInformation("Printing Excel to file {targetFilename}", targetFilename);
+            var copySuccessful = printableDiagram.PrintToSpreadsheetFile(info.FullFilename, targetFilename);
+            return copySuccessful;
         }
-
         // default case - print to a physical printer
-        return new DiagramPhysicalPrinter().DoPrint(diagram, info, GetTargetFilename(folder, filename));
+        var diagramPhysicalPrinter = new DiagramPhysicalPrinter();
+        return diagramPhysicalPrinter.DoPrint(printableDiagram, info, GetTargetFilename(folder, filename));
     }
     
     public bool PrintReport(FlowchartDiagram? diagram, string reportTemplate, string? folder = null,
@@ -126,6 +134,7 @@ public class DiagramPrinter
     }
 
 
+
     private static string GetTargetFilename(string? folder, string? filename)
     {
         if (folder == null)
@@ -137,11 +146,11 @@ public class DiagramPrinter
         {
             filename = Path.GetTempFileName();
         }
-
         var targetFilename = Path.Join(folder, filename);
         return targetFilename;
     }
-
+    
+    
     public bool ValidateReport(string template, FlowchartReportItems substitutions)
     {
         try

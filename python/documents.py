@@ -1,6 +1,3 @@
-from reporting import FlowchartReportItems, DiagramPage
-
-
 class DiagramSummary:
     def __init__(self, language):
         self._language = language
@@ -81,11 +78,28 @@ class PdfDocument:
 
 
 class PngDocument:
-    def __init__(self, filename):
+    def __init__(self, filename: str):
         self._filename = filename
 
     def filename(self):
         return self._filename
+
+
+class PrintableDiagram:
+    def __init__(self, diagram : FlowchartDiagram):
+        self.diagram = diagram
+
+    def get_diagram_metadata(self):
+        return DiagramMetadata(self.diagram)
+
+    def print_to_file(self, from_filename, target_filename):
+        return self.diagram.flowchart_as_pdf().copy_file(from_filename, target_filename, True)
+
+    def print_to_spreadsheet_file(self, from_filename, target_filename):
+        return self.diagram.flowchart_data_as_spreadsheet().copy_file(from_filename, target_filename, True)
+
+    def summary_information(self):
+        return self.diagram.summary_information()
 
 
 # This is the real production code class.
@@ -95,12 +109,12 @@ class SpreadsheetDocument:
     def __init__(self):
         raise NotImplementedError("Can't construct this in a unit test")
 
-    def copy_file(self, info_full_filename, target_filename, overwrite):
+    def copy_file(self, info_full_filename : str, target_filename: str, overwrite: bool):
         raise NotImplementedError("Can't call this from a unit test")
 
 
 class DiagramMetadata:
-    def __init__(self, idiagram):
-        self.full_filename = f"{idiagram.name()}_{idiagram.serial_number()}"
-        self.file_type = "PDF" if "Flowchart" in idiagram.name() else "Spreadsheet"
-        self.file_available = not idiagram.is_disposed()
+    def __init__(self, diagram: FlowchartDiagram):
+        self.full_filename = f"{diagram.name()}_{diagram.serial_number()}"
+        self.file_type = "PDF" if "Flowchart" in diagram.name() else "Spreadsheet"
+        self.file_available = not diagram.is_disposed()

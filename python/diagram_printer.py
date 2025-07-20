@@ -1,7 +1,7 @@
 import os
 import logging
 
-from documents import DiagramSummary, FlowchartDiagram, DiagramMetadata
+from documents import DiagramSummary, FlowchartDiagram, PrintableDiagram
 from physical_printer import DiagramPhysicalPrinter
 from reporting import DiagramPagesReport, FlowchartReportItems, PagesBuilder
 
@@ -29,22 +29,26 @@ class DiagramPrinter:
         if diagram is None:
             return False
 
-        info = DiagramMetadata(diagram)
+        printable_diagram = PrintableDiagram(diagram)
+        return self._print_diagram(printable_diagram, folder, filename)
+
+    def _print_diagram(self, printable_diagram: PrintableDiagram, folder, filename):
+        info = printable_diagram.get_diagram_metadata()
         target_filename = self._get_target_filename(folder, filename)
 
         if info.file_type == self.PDF:
             self._logger.info(f"Printing PDF to file {target_filename}")
-            return diagram.flowchart_as_pdf().copy_file(info.full_filename, target_filename, True)
+            return printable_diagram.print_to_file(info.full_filename, target_filename)
 
         if info.file_type == self.SPREADSHEET:
             if not target_filename.endswith(".xls"):
                 target_filename += ".xls"
             self._logger.info(f"Printing Excel to file {target_filename}")
-            return diagram.flowchart_data_as_spreadsheet().copy_file(info.full_filename, target_filename, True)
+            return printable_diagram.print_to_spreadsheet_file(info.full_filename, target_filename)
 
         # default case - print to a physical printer
         diagram_physical_printer = DiagramPhysicalPrinter()
-        return diagram_physical_printer.do_print(diagram, info, target_filename)
+        return diagram_physical_printer.do_print(printable_diagram, info, target_filename)
 
     def print_report(self, diagram: FlowchartDiagram, report_template: str, folder: str,
                      filename: str, summarize: bool) -> bool:
@@ -99,7 +103,7 @@ class DiagramPrinter:
         return builder.apply(report, report_pages)
 
     @staticmethod
-    def _get_target_filename(folder, filename):
+    def _get_target_filename(folder, filename: str = None):
         folder = folder or os.path.expanduser("~")
         filename = filename or "tempfile.tmp"
         return os.path.join(folder, filename)

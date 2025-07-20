@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Security.Authentication;
+﻿using System.Security.Authentication;
 
 namespace DiagramPrinter;
 
@@ -49,7 +48,6 @@ public class FlowchartDiagram
         throw new NotImplementedException("Can't call this from a unit test");
     }
     
-    // Imagine about 200 more methods here
     public FlowchartReport Report()
     {
         throw new NotImplementedException();
@@ -79,6 +77,7 @@ public class FlowchartDiagram
             new DiagramPage(this.Name(), "page 2"),
         };
     }
+    // Imagine about 200 more methods here
 }
 
 public class FlowchartReport
