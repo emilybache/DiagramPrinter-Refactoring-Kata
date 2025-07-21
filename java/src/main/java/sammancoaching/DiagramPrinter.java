@@ -1,12 +1,11 @@
 package sammancoaching;
 
-import java.util.logging.Logger;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.IllegalFormatException;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * This is a class you'd like to get under test so you can change it safely.
@@ -35,15 +34,10 @@ public class DiagramPrinter {
             return false;
         }
 
-        PrintableDiagram printableDiagram = new PrintableDiagram(diagram);
-        return printDiagram(printableDiagram, folder, filename);
-    }
-
-    public static boolean printDiagram(PrintableDiagram printableDiagram, String folder, String filename) throws IOException {
-        DiagramMetadata info = printableDiagram.getDiagramMetadata();
+        DiagramMetadata info = new DiagramMetadata(diagram);
         if (PDF.equals(info.fileType)) {
             String targetFilename = getTargetFilename(folder, filename);
-            return printableDiagram.printToFile(info.fullFilename, targetFilename);
+            return diagram.getFlowchartAsPdf().copyFile(info.fullFilename, targetFilename, true);
         }
 
         if (SPREADSHEET.equals(info.fileType)) {
@@ -51,12 +45,13 @@ public class DiagramPrinter {
             if (!targetFilename.endsWith(".xls")) {
                 targetFilename += ".xls";
             }
-            return printableDiagram.printSpreadsheetToFile(info.fullFilename, targetFilename);
+            return diagram.getFlowchartDataAsSpreadsheet().copyFile(info.fullFilename, targetFilename, true);
         }
 
         // Default case - print to a physical printer
-        return new DiagramPhysicalPrinter().doPrint(printableDiagram, info, getTargetFilename(folder, filename));
+        return new DiagramPhysicalPrinter().doPrint(diagram, info, getTargetFilename(folder, filename));
     }
+
 
     public boolean printReport(FlowchartDiagram diagram, String reportTemplate, String folder,
                                String filename, boolean summarize) {

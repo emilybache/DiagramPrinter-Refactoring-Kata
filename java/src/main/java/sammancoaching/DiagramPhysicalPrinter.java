@@ -1,9 +1,9 @@
 package sammancoaching;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
-import java.io.File;
 
 /**
  * This is a class you'd like to get under test so you can change it safely.
@@ -24,10 +24,10 @@ public class DiagramPhysicalPrinter {
         this.printQueue = new PrintQueue(this.physicalPrinter);
     }
 
-    public boolean doPrint(PrintableDiagram diagram, DiagramMetadata info, String targetFilename) throws IOException {
+    public boolean doPrint(FlowchartDiagram diagram, DiagramMetadata info, String targetFilename) throws IOException {
         PrinterDriverFactory factory = PrinterDriverFactory.getInstance();
         DiagramPrintDriver printerDriver = factory.createDriverForPrint();
-        printerDriver.setDiagram(diagram.getDiagram());
+        printerDriver.setDiagram(diagram);
 
         PrintMetadata data = new PrintMetadata(info.fileType);
         boolean success = false;
@@ -63,10 +63,10 @@ public class DiagramPhysicalPrinter {
 
             if (success) {
                 // Save a backup of the printed document as PDF
-                File file = data.getFile();
+                File file = new File(data.getFilename());
                 if (file.exists()) {
                     logger.info("Saving backup of printed document as PDF to file " + targetFilename);
-                    diagram.printToFile(data.getFilename(), targetFilename);
+                    diagram.getFlowchartAsPdf().copyFile(data.getFilename(), targetFilename, true);
                 }
             }
         } catch (Exception e) {
