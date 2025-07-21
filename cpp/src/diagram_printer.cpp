@@ -3,6 +3,8 @@
 #include <iostream>
 #include <filesystem>
 
+#include "diagram_physical_printer.h"
+
 // Initialize static constants
 const std::string DiagramPrinter::Spreadsheet = "Spreadsheet";
 const std::string DiagramPrinter::Pdf = "PDF";
@@ -23,6 +25,47 @@ bool DiagramPrinter::PrintSummary(FlowchartDiagram* diagram, const std::string& 
     summaryText = summary.Export();
     return true;
 }
+
+bool DiagramPrinter::PrintDiagram(FlowchartDiagram* diagram,
+                                  const std::string &folder,
+                                  const std::string &filename) {
+    if (diagram == nullptr) {
+        return false;
+    }
+    auto printableDiagram = new PrintableDiagram(diagram);
+    bool result = PrintDiagram(printableDiagram, folder, filename);
+    delete printableDiagram;
+    return result;
+}
+
+bool DiagramPrinter::PrintDiagram(PrintableDiagram* printableDiagram,
+                                  const std::string &folder,
+                                  const std::string &filename) {
+    DiagramMetadata *info = printableDiagram->GetDiagramMetadata();
+    
+    if (info->getFileType() == Pdf) {
+        std::string targetFilename = GetTargetFilename(folder, filename);
+         std::cout << "Printing Pdf to file " << targetFilename;
+        return printableDiagram->PrintToFile(info->getFullFilename(), targetFilename);
+    }
+
+    if (info->getFileType() == Spreadsheet) {
+        std::string targetFilename = GetTargetFilename(folder, filename);
+        if (targetFilename.substr(targetFilename.length() - 4) != ".xls") {
+            targetFilename += ".xls";
+        }
+        std::cout << "Printing Excel to file " << targetFilename;
+        return printableDiagram->PrintToSpreadsheetFile(info->getFullFilename(), targetFilename);
+    }
+
+    // default case - print to a physical printer
+    auto diagramPhysicalPrinter = new DiagramPhysicalPrinter();
+    bool result = diagramPhysicalPrinter->DoPrint(*printableDiagram, info, 
+                                                 GetTargetFilename(folder, filename));
+    delete diagramPhysicalPrinter;
+    return result;
+}
+
 
 bool DiagramPrinter::PrintReport(FlowchartDiagram* diagram,
                                const std::string& reportTemplate,
@@ -95,19 +138,19 @@ std::string DiagramPrinter::GetTargetFilename(const std::string& folder,
     
     fs::path folderPath;
     if (folder.empty())
-        folderPath = fs::temp_directory_path();
+        folderPath = fs::absolute(fs::temp_directory_path());
     else
         folderPath = folder;
 
-    fs::path filePath;
+    std::string tempName;
     if (filename.empty()) {
-        // Create temporary file
-        filePath = fs::temp_directory_path() / fs::path("temporary filename");
+        // Create temporary filename
+        tempName = "temporaryFilename";
     } else {
-        filePath = filename;
+        tempName = filename;
     }
 
-    return (folderPath / filePath).string();
+    return (folderPath / tempName).string();
 }
 
 bool DiagramPrinter::ValidateReport(const std::string& template_str,

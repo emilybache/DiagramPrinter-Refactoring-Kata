@@ -21,7 +21,7 @@ public:
     FlowchartDiagram* GetDiagram() const { return _diagram; }
 
     virtual DiagramMetadata* GetDiagramMetadata() {
-        return new DiagramMetadata(*_diagram);
+        return new DiagramMetadata(_diagram);
     }
 
     virtual bool PrintToFile(const std::string& fromFilename, const std::string& targetFilename) const {

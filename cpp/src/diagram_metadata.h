@@ -8,7 +8,7 @@
 class DiagramMetadata {
 public:
     // Constructor
-    explicit DiagramMetadata(FlowchartDiagram& diagram);
+    explicit DiagramMetadata(FlowchartDiagram *diagram);
     
     // Getters
     std::string getFullFilename() const { return m_fullFilename; }
@@ -18,8 +18,7 @@ public:
 protected:
     // Protected constructor for testing purposes
     DiagramMetadata() = default;
-
-private:
+    
     std::string m_fullFilename;
     std::string m_fileType;
     bool m_fileAvailable;

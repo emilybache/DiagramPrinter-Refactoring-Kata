@@ -8,8 +8,8 @@
 class DiagramPrinterTests;
 
 class PrinterDriverFactory {
-private:
-    static PrinterDriverFactory* _instance;
+protected:
+    static inline PrinterDriverFactory* _instance;
     
     // Private constructor for singleton
     PrinterDriverFactory() = default;
@@ -36,14 +36,15 @@ public:
 
 private:
     // Allow test class to modify the instance
-    friend class DiagramPrinterTests;
+    friend class PrinterDriverFactoryTest;
     static void SetInstance(PrinterDriverFactory* instance) {
         delete _instance;  // Clean up existing instance
         _instance = instance;
     }
+    static void ResetInstance() {
+        delete _instance;
+        _instance = nullptr;
+    }
 };
-
-// Define the static member outside the class
-PrinterDriverFactory* PrinterDriverFactory::_instance = nullptr;
 
 #endif // PRINTER_DRIVER_FACTORY_H

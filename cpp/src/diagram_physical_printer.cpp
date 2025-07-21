@@ -34,13 +34,13 @@ DiagramPhysicalPrinter::~DiagramPhysicalPrinter()
 }
 
 bool DiagramPhysicalPrinter::DoPrint(const PrintableDiagram& printableDiagram,
-                                   const DiagramMetadata& info,
-                                   const std::string& targetFilename)
+                                     const DiagramMetadata *info,
+                                     const std::string& targetFilename)
 {
     DiagramPrintDriver* printerDriver = PrinterDriverFactory::GetInstance().CreateDriverForPrint();
     printerDriver->SetDiagram(printableDiagram.GetDiagram());
 
-    PrintMetadata data(info.getFileType());
+    PrintMetadata data(info->getFileType());
     std::mutex _mutex;
     bool success = false;
 

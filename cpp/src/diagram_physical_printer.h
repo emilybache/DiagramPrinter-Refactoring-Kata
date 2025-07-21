@@ -26,8 +26,8 @@ public:
 
     // Print method
     bool DoPrint(const PrintableDiagram& printableDiagram,
-                const DiagramMetadata& info,
-                const std::string& targetFilename);
+                 const DiagramMetadata *info,
+                 const std::string& targetFilename);
 };
 
 #endif // DIAGRAM_PHYSICAL_PRINTER_H
