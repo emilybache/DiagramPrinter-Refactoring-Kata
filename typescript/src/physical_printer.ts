@@ -28,12 +28,10 @@ class DiagramPhysicalPrinter {
     try {
       await mutex.acquire();
 
-      const hasEnoughToner = this._physicalPrinter.tonerLevels.get(Toner.Black)! > 0 &&
+      if (!this._physicalPrinter.isAvailable || !(this._physicalPrinter.tonerLevels.get(Toner.Black)! > 0 &&
         this._physicalPrinter.tonerLevels.get(Toner.Cyan)! > 0 &&
         this._physicalPrinter.tonerLevels.get(Toner.Magenta)! > 0 &&
-        this._physicalPrinter.tonerLevels.get(Toner.Yellow)! > 0;
-
-      if (!this._physicalPrinter.isAvailable || !hasEnoughToner) {
+        this._physicalPrinter.tonerLevels.get(Toner.Yellow)! > 0)) {
         console.info("Physical Printer Unavailable");
       } else if (this._physicalPrinter.jobCount < 0) {
         console.info("Physical Printer Unavailable Due to Job Count Inconsistency");
