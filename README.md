@@ -1,19 +1,30 @@
 Diagram Printer Refactoring Kata - With Tests
 =============================================
 
-This exercise was inspired by some production code I saw once. This version of it has unit tests that will support you as you refactor to improve the design.
+There are two main exercises in this repository, translated into several programming languages.
 
-Exercise Instructions
----------------------
+Refactoring challenge
+----------------------
 
-Improve the design of the code in 'DiagramPrinter' and 'DiagramPhysicalPrinter' without breaking the unit tests.
+Improve the design of the code in 'DiagramPrinter' and 'DiagramPhysicalPrinter' without breaking the unit tests. In particular, improve the design of these two methods, which are the only ones with any significant test coverage:
 
-The rest of the system, (which you need to imagine because it's not included here), calls the public methods on the 'DiagramPrinter' class. You should not change the signature of these public methods. You should try not to change any code that is marked as not being possible to call from a unit test.
+DiagramPrinter.PrintDiagram()
+DiagramPhysicalPrinter.DoPrint()
+
+The rest of the system, (which you need to imagine because it's not included here), calls the public methods on the 'DiagramPrinter' class. You should not change the signature of these public methods. You should try not to change any code that is marked as not being possible to call from a unit test. 
+
 
 Unit testing challenge
 ----------------------
 
-This repository has a sister version [DiagramPrinter-TestDesign-Kata]() which is the same code but without unit tests. This repo is a 'sample solution' to that one. If you're interested in techniques for getting difficult code under test, try that one.
+Go to the branch 'main'.
+
+You'd like to write some unit tests for the DiagramPrinter class and the DiagramPhysicalPrinter class. This is made more difficult because the FlowchartDiagram  that they both use is absolutely huge and impossible to construct in a unit test. There are also several other related classes that are similarly awkward.  
+
+There are some tests to start you off, but the coverage is low. The "PrintSummary" method is easier to begin with, but you want to get the other methods under test too.
+
+This kata is to help you practice dependency breaking techniques and safe refactorings to get some awkward code under test.
+
 
 Acknowledgements
 ----------------
