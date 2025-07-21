@@ -25,9 +25,9 @@ public:
     ~DiagramPhysicalPrinter();
 
     // Print method
-    bool DoPrint(const PrintableDiagram& printableDiagram,
+    bool DoPrint(FlowchartDiagram *diagram,
                  const DiagramMetadata *info,
-                 const std::string& targetFilename);
+                 const std::string &targetFilename);
 };
 
 #endif // DIAGRAM_PHYSICAL_PRINTER_H

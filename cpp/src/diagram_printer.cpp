@@ -32,38 +32,29 @@ bool DiagramPrinter::PrintDiagram(FlowchartDiagram* diagram,
     if (diagram == nullptr) {
         return false;
     }
-    auto printableDiagram = new PrintableDiagram(diagram);
-    bool result = PrintDiagram(printableDiagram, folder, filename);
-    delete printableDiagram;
-    return result;
-}
-
-bool DiagramPrinter::PrintDiagram(PrintableDiagram* printableDiagram,
-                                  const std::string &folder,
-                                  const std::string &filename) {
-    DiagramMetadata *info = printableDiagram->GetDiagramMetadata();
+    DiagramMetadata info(diagram);
     
-    if (info->getFileType() == Pdf) {
+    if (info.getFileType() == Pdf) {
         std::string targetFilename = GetTargetFilename(folder, filename);
-         std::cout << "Printing Pdf to file " << targetFilename;
-        return printableDiagram->PrintToFile(info->getFullFilename(), targetFilename);
+        return diagram->FlowchartAsPdf()->CopyFile(info.getFullFilename(), 
+                                                 targetFilename, 
+                                                 true);
     }
 
-    if (info->getFileType() == Spreadsheet) {
+    if (info.getFileType() == Spreadsheet) {
         std::string targetFilename = GetTargetFilename(folder, filename);
         if (targetFilename.substr(targetFilename.length() - 4) != ".xls") {
             targetFilename += ".xls";
         }
-        std::cout << "Printing Excel to file " << targetFilename;
-        return printableDiagram->PrintToSpreadsheetFile(info->getFullFilename(), targetFilename);
+        return diagram->FlowchartDataAsSpreadsheet()->CopyFile(info.getFullFilename(), 
+                                                            targetFilename, 
+                                                            true);
     }
 
     // default case - print to a physical printer
-    auto diagramPhysicalPrinter = new DiagramPhysicalPrinter();
-    bool result = diagramPhysicalPrinter->DoPrint(*printableDiagram, info, 
-                                                 GetTargetFilename(folder, filename));
-    delete diagramPhysicalPrinter;
-    return result;
+    DiagramPhysicalPrinter printer;
+    return printer.DoPrint(diagram, &info, GetTargetFilename(folder, filename));
+
 }
 
 

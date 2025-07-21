@@ -33,12 +33,12 @@ DiagramPhysicalPrinter::~DiagramPhysicalPrinter()
     }
 }
 
-bool DiagramPhysicalPrinter::DoPrint(const PrintableDiagram& printableDiagram,
+bool DiagramPhysicalPrinter::DoPrint(FlowchartDiagram *diagram,
                                      const DiagramMetadata *info,
-                                     const std::string& targetFilename)
+                                     const std::string &targetFilename)
 {
     DiagramPrintDriver* printerDriver = PrinterDriverFactory::GetInstance().CreateDriverForPrint();
-    printerDriver->SetDiagram(printableDiagram.GetDiagram());
+    printerDriver->SetDiagram(diagram);
 
     PrintMetadata data(info->getFileType());
     std::mutex _mutex;
@@ -63,7 +63,7 @@ bool DiagramPhysicalPrinter::DoPrint(const PrintableDiagram& printableDiagram,
         else {
             // Print the diagram using the Physical Printer
             _printQueue->Add(data);
-            std::string summaryInformation = printableDiagram.SummaryInformation();
+            std::string summaryInformation = diagram->SummaryInformation();
             std::cout << "Diagram Summary Information: " << summaryInformation << std::endl;
             bool isSummary = summaryInformation.length() > 10;
 
@@ -81,7 +81,7 @@ bool DiagramPhysicalPrinter::DoPrint(const PrintableDiagram& printableDiagram,
             if (std::filesystem::exists(data.GetFilename())) {
                 std::cout << "Saving backup of printed document as PDF to file: " 
                          << targetFilename << std::endl;
-                printableDiagram.PrintToFile(data.GetFilename(), targetFilename);
+                diagram->FlowchartAsPdf()->CopyFile(data.GetFilename(), targetFilename, true);
             }
         }
     }
