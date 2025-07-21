@@ -2,6 +2,7 @@ import logging
 import os
 import threading
 
+from documents import FlowchartDiagram
 from printing import PhysicalPrinter, PrintQueue, PrinterDriverFactory, PrintMetadata, Toner
 
 
@@ -12,9 +13,9 @@ class DiagramPhysicalPrinter:
         self._print_queue = print_queue or PrintQueue(self._physical_printer)
         self._logger = logging.getLogger("DiagramPhysicalPrinter")
 
-    def do_print(self, printable_diagram, info, target_filename):
+    def do_print(self, diagram: FlowchartDiagram, info, target_filename):
         printer_driver = PrinterDriverFactory.get_instance().create_driver_for_print()
-        printer_driver.set_diagram(printable_diagram.diagram)
+        printer_driver.set_diagram(diagram)
 
         data = PrintMetadata(info.file_type)
         mutex = threading.Lock()
@@ -23,7 +24,8 @@ class DiagramPhysicalPrinter:
         with ((mutex)):
             if not self._physical_printer.is_available or not (self._physical_printer.toner_levels[Toner.Black] > 0 and
                                                                self._physical_printer.toner_levels[Toner.Cyan] > 0 and
-                                                               self._physical_printer.toner_levels[Toner.Magenta] > 0 and
+                                                               self._physical_printer.toner_levels[
+                                                                   Toner.Magenta] > 0 and
                                                                self._physical_printer.toner_levels[Toner.Yellow] > 0):
                 self._logger.info("Physical Printer Unavailable")
             elif self._physical_printer.job_count < 0:
@@ -31,7 +33,7 @@ class DiagramPhysicalPrinter:
             else:
                 # Print the diagram using the Physical Printer
                 self._print_queue.add(data)
-                summary_information = printable_diagram.summary_information()
+                summary_information = diagram.summary_information()
                 self._logger.info(f"Diagram Summary Information {summary_information}")
 
                 is_summary = len(summary_information) > 10
@@ -45,7 +47,7 @@ class DiagramPhysicalPrinter:
                     # save a backup of the printed document as pdf
                     if os.path.exists(data.filename):
                         self._logger.info(f"Saving backup of printed document as PDF to file {target_filename}")
-                        printable_diagram.print_to_file(data.filename, target_filename)
+                        diagram.flowchart_as_pdf().copy_file(data.filename, target_filename, True)
 
         printer_driver.release_diagram()
         return success
