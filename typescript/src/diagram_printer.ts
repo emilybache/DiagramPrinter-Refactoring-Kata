@@ -4,7 +4,6 @@ import { DiagramSummary, FlowchartDiagram, DiagramMetadata } from './documents';
 import { DiagramPhysicalPrinter } from './physical_printer';
 import {DiagramPagesReport, DiagramReportPage, FlowchartReportItems, PagesBuilder} from "./reporting";
 import * as util from "util";
-import {PrintableDiagram} from "./printableDiagram";
 
 
 class DiagramPrinter {
@@ -32,33 +31,25 @@ class DiagramPrinter {
       return false;
     }
 
-    let printableDiagram = new PrintableDiagram(diagram);
-    return this.printDiagramInternal(printableDiagram, folder, filename);
-  }
-
-  public async printDiagramInternal(
-    printableDiagram: PrintableDiagram,
-    folder?: string,
-    filename?: string
-  ): Promise<boolean> {
-    const info = printableDiagram.getDiagramMetadata();
+    const info = new DiagramMetadata(diagram);
+    let targetFilename = this._getTargetFilename(folder, filename);
 
     if (info.fileType === DiagramPrinter.PDF) {
-      const targetFilename = this._getTargetFilename(folder, filename);
-      return printableDiagram.printToFile(info.fullFilename, targetFilename);
+      console.info(`Printing PDF to file ${targetFilename}`);
+      return diagram.flowchartAsPdf().copyFile(info.fullFilename, targetFilename, true);
     }
 
     if (info.fileType === DiagramPrinter.SPREADSHEET) {
-      let targetFilename = this._getTargetFilename(folder, filename);
       if (!targetFilename.endsWith(".xls")) {
         targetFilename += ".xls";
       }
-      return printableDiagram.printToSpreadsheetFile(info.fullFilename, targetFilename);
+      console.info(`Printing Excel to file ${targetFilename}`);
+      return diagram.flowchartDataAsSpreadsheet().copyFile(info.fullFilename, targetFilename, true);
     }
 
-    // Default case - print to a physical printer
-    const physicalPrinter = new DiagramPhysicalPrinter();
-    return await physicalPrinter.doPrint(printableDiagram, info, this._getTargetFilename(folder, filename));
+    // default case - print to a physical printer
+    const diagramPhysicalPrinter = new DiagramPhysicalPrinter();
+    return await diagramPhysicalPrinter.doPrint(diagram, info, targetFilename);
   }
 
 
