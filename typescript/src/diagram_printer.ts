@@ -4,11 +4,12 @@ import { DiagramSummary, FlowchartDiagram, DiagramMetadata } from './documents';
 import { DiagramPhysicalPrinter } from './physical_printer';
 import {DiagramPagesReport, DiagramReportPage, FlowchartReportItems, PagesBuilder} from "./reporting";
 import * as util from "util";
+import {PrintableDiagram} from "./printableDiagram";
 
 
 class DiagramPrinter {
-  private static readonly SPREADSHEET = "Spreadsheet";
-  private static readonly PDF = "PDF";
+  static readonly SPREADSHEET = "Spreadsheet";
+  static readonly PDF = "PDF";
 
   constructor() {
   }
@@ -31,26 +32,35 @@ class DiagramPrinter {
       return false;
     }
 
-    const info = new DiagramMetadata(diagram);
-    let targetFilename = DiagramPrinter._getTargetFilename(folder, filename);
+    let printableDiagram = new PrintableDiagram(diagram);
+    return this.printDiagramInternal(printableDiagram, folder, filename);
+  }
+
+  public async printDiagramInternal(
+    printableDiagram: PrintableDiagram,
+    folder?: string,
+    filename?: string
+  ): Promise<boolean> {
+    const info = printableDiagram.getDiagramMetadata();
 
     if (info.fileType === DiagramPrinter.PDF) {
-      console.info(`Printing PDF to file ${targetFilename}`);
-      return diagram.flowchartAsPdf().copyFile(info.fullFilename, targetFilename, true);
+      const targetFilename = this._getTargetFilename(folder, filename);
+      return printableDiagram.printToFile(info.fullFilename, targetFilename);
     }
 
     if (info.fileType === DiagramPrinter.SPREADSHEET) {
+      let targetFilename = this._getTargetFilename(folder, filename);
       if (!targetFilename.endsWith(".xls")) {
         targetFilename += ".xls";
       }
-      console.info(`Printing Excel to file ${targetFilename}`);
-      return diagram.flowchartDataAsSpreadsheet().copyFile(info.fullFilename, targetFilename, true);
+      return printableDiagram.printToSpreadsheetFile(info.fullFilename, targetFilename);
     }
 
-    // default case - print to a physical printer
-    const diagramPhysicalPrinter = new DiagramPhysicalPrinter();
-    return await diagramPhysicalPrinter.doPrint(diagram, info, targetFilename);
+    // Default case - print to a physical printer
+    const physicalPrinter = new DiagramPhysicalPrinter();
+    return await physicalPrinter.doPrint(printableDiagram, info, this._getTargetFilename(folder, filename));
   }
+
 
   printReport(
     diagram: FlowchartDiagram | null,
@@ -64,7 +74,7 @@ class DiagramPrinter {
     }
 
     let report = diagram.report();
-    const targetFilename = DiagramPrinter._getTargetFilename(folder, filename);
+    const targetFilename = this._getTargetFilename(folder, filename);
     console.info(`Creating report for ${diagram.name()} to file ${targetFilename}`);
 
     if (summarize) {
@@ -118,7 +128,7 @@ class DiagramPrinter {
     return builder.apply(report, reportPages);
   }
 
-  private static _getTargetFilename(folder?: string, filename?: string): string {
+  private _getTargetFilename(folder?: string, filename?: string): string {
     const targetFolder = folder || os.homedir();
     const targetFilename = filename || "tempfile.tmp";
     return path.join(targetFolder, targetFilename);

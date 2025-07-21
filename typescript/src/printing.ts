@@ -10,9 +10,9 @@ enum Toner {
 }
 
 class PhysicalPrinter {
-  private _isAvailable: boolean = false;
+  protected _isAvailable: boolean = false;
   private _jobCount: number = 0;
-  private _tonerLevels: Map<Toner, number>;
+  protected _tonerLevels: Map<Toner, number>;
 
   constructor() {
     this._tonerLevels = new Map([

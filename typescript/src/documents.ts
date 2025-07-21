@@ -1,8 +1,4 @@
-import {
-  DiagramPage,
-  FlowchartReport,
-  FlowchartReportItems
-} from "./reporting";
+import {DiagramPage, FlowchartReport, FlowchartReportItems} from "./reporting";
 
 class DiagramSummary {
   private _language: string;
@@ -121,7 +117,13 @@ class SpreadsheetDocument {
   }
 }
 
-class DiagramMetadata {
+export interface IDiagramMetadata {
+  fullFilename: string;
+  fileType: string;
+  fileAvailable: boolean;
+}
+
+class DiagramMetadata implements IDiagramMetadata {
   fullFilename: string;
   fileType: string;
   fileAvailable: boolean;

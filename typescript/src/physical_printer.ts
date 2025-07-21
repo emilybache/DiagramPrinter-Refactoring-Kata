@@ -1,13 +1,8 @@
 import * as fs from 'fs';
-import { FlowchartDiagram, DiagramMetadata } from './documents';
-import {
-  PhysicalPrinter,
-  PrintQueue,
-  PrinterDriverFactory,
-  PrintMetadata,
-  Toner
-} from './printing';
-import { Mutex } from 'async-mutex';  // for thread-safe locking
+import {FlowchartDiagram, IDiagramMetadata} from './documents';
+import {PhysicalPrinter, PrinterDriverFactory, PrintMetadata, PrintQueue, Toner} from './printing';
+import {Mutex} from 'async-mutex';
+import {PrintableDiagram} from "./printableDiagram"; // for thread-safe locking
 
 class DiagramPhysicalPrinter {
   private _physicalPrinter: PhysicalPrinter;
@@ -19,12 +14,12 @@ class DiagramPhysicalPrinter {
   }
 
   async doPrint(
-    diagram: FlowchartDiagram,
-    info: DiagramMetadata,
+    diagram: PrintableDiagram,
+    info: IDiagramMetadata,
     targetFilename: string
   ): Promise<boolean> {
     const printerDriver = PrinterDriverFactory.getInstance().createDriverForPrint();
-    printerDriver.setDiagram(diagram);
+    printerDriver.setDiagram(diagram.getDiagram() as FlowchartDiagram);
 
     const data = new PrintMetadata(info.fileType);
     const mutex = new Mutex();
@@ -61,7 +56,7 @@ class DiagramPhysicalPrinter {
           // save a backup of the printed document as pdf
           if (fs.existsSync(data.filename)) {
             console.info(`Saving backup of printed document as PDF to file ${targetFilename}`);
-            diagram.flowchartAsPdf().copyFile(data.filename, targetFilename, true);
+            diagram.printToFile(data.filename, targetFilename);
           }
         }
       }
