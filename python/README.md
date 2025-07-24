@@ -38,5 +38,5 @@ pip install --upgrade -r requirements.txt
 ### Run Tests
 
 ```shell
-pytest
+pytest ./tests/
 ```
