@@ -1,11 +1,11 @@
 import pytest
 
 from diagram_printer import DiagramPrinter
-from fakes import FakeFlowchartReportItems
+from tests.fakes import FakeFlowchartReportItems
 from physical_printer import DiagramPhysicalPrinter
 from printing import PrinterDriverFactory
 from reporting import PagesBuilder
-from spies import SpyPhysicalPrinter, SpyQueue, SpyPrintableDiagram, StubDiagramMetadata, \
+from tests.spies import SpyPhysicalPrinter, SpyQueue, SpyPrintableDiagram, StubDiagramMetadata, \
     StubPrinterDriverFactory
 
 
