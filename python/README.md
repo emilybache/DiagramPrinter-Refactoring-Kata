@@ -1,14 +1,42 @@
 DiagramPrinter-Refactoring-Kata
 ===============================
 
-For exercise instructions see (top level README)[../README.md]
+For exercise instructions see [top level README](../README.md)
 
-Suggestion: create a python virtual environment for this project. See the [documentation](https://docs.python.org/3/library/venv.html)
+## Setup
 
-install requirements:
+Change directory to `python`
 
-    pip install --upgrade -r requirements.txt
+```shell
+cd python
+```
 
-run tests:
+### Create a Python Virtual Environment
 
-    python -m pytest
+It's recommended to create a Python virtual environment for this project to isolate dependencies. See the [documentation](https://docs.python.org/3/library/venv.html) for more details.
+
+#### On Windows:
+
+```powershell
+python -m venv venv
+venv\Scripts\activate
+```
+
+#### On macOS/Linux:
+
+```shell
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### Install Requirements
+
+```shell
+pip install --upgrade -r requirements.txt
+```
+
+### Run Tests
+
+```shell
+pytest ./tests/
+```
