@@ -32,11 +32,14 @@ export class DiagramPage {
   addDataFrom(data: FlowchartReportItems): void {
     try {
       if (this._pageContents.includes("{0}")) {
-        this._pageContents = this._pageContents.replace(/\{(\d+)\}/g, (...args) => {
-          const index = parseInt(args[1]);
-          const dataArray = data.toArray();
-          return dataArray[index]?.toString() ?? '';
-        });
+        this._pageContents = this._pageContents.replace(
+          /\{(\d+)\}/g,
+          (...args) => {
+            const index = parseInt(args[1]);
+            const dataArray = data.toArray();
+            return dataArray[index]?.toString() ?? "";
+          },
+        );
       }
     } catch (error) {
       // Silently handle formatting errors
@@ -45,7 +48,10 @@ export class DiagramPage {
 }
 
 export class PagesBuilder {
-  processPage(page: DiagramPage, data: FlowchartReportItems): DiagramReportPage {
+  processPage(
+    page: DiagramPage,
+    data: FlowchartReportItems,
+  ): DiagramReportPage {
     page.addDataFrom(data);
     return new DiagramReportPage(page);
   }
@@ -96,7 +102,11 @@ export class FlowchartReport {
     throw new Error("Not supported");
   }
 
-  openWithContents(reportTemplate: string, substitutions: FlowchartReportItems, readOnly: boolean): void {
+  openWithContents(
+    reportTemplate: string,
+    substitutions: FlowchartReportItems,
+    readOnly: boolean,
+  ): void {
     throw new Error("Not supported");
   }
 

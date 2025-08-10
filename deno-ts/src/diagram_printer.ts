@@ -1,5 +1,5 @@
-import path from "node:path";
-import os from "node:os";
+import * as path from "jsr:@std/path";
+import { sprintf } from "jsr:@std/fmt/printf";
 import {
   DiagramMetadata,
   DiagramSummary,
@@ -12,7 +12,7 @@ import {
   FlowchartReportItems,
   PagesBuilder,
 } from "./reporting.ts";
-import util from "node:util";
+import { getHomedir } from "./utils.ts";
 
 class DiagramPrinter {
   static readonly SPREADSHEET = "Spreadsheet";
@@ -144,7 +144,7 @@ class DiagramPrinter {
   }
 
   private _getTargetFilename(folder?: string, filename?: string): string {
-    const targetFolder = folder || os.homedir();
+    const targetFolder = folder || getHomedir();
     const targetFilename = filename || "tempfile.tmp";
     return path.join(targetFolder, targetFilename);
   }
@@ -163,8 +163,7 @@ class DiagramPrinter {
   }
 
   createReport(template: string, substitutions: any[]): string {
-    let report = util.format(template, ...substitutions);
-    return report;
+    return sprintf(template, ...substitutions);
   }
 }
 

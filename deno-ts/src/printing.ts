@@ -1,6 +1,5 @@
 import { FlowchartDiagram } from "./documents.ts";
-import path from "node:path";
-import fs from "node:fs";
+import * as path from "jsr:@std/path";
 
 enum Toner {
   Black,
@@ -67,7 +66,8 @@ class PrintMetadata {
   }
 
   private _generateTempFilename(infoFileType: string): string {
-    const tempFilename = path.join(path.dirname(__filename), "tempfile");
+    const currentFilename = import.meta.url;
+    const tempFilename = path.join(path.dirname(currentFilename), "tempfile");
     return `${tempFilename}.${infoFileType}`;
   }
 }

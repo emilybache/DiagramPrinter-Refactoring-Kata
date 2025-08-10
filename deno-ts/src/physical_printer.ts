@@ -1,4 +1,4 @@
-import fs from "node:fs";
+import { exists } from "jsr:@std/fs/exists";
 import {
   DiagramMetadata,
   FlowchartDiagram,
@@ -73,7 +73,7 @@ class DiagramPhysicalPrinter {
 
         if (success) {
           // save a backup of the printed document as pdf
-          if (fs.existsSync(data.filename)) {
+          if (await exists(data.filename)) {
             console.info(
               `Saving backup of printed document as PDF to file ${targetFilename}`,
             );
