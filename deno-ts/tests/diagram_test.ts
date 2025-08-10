@@ -1,0 +1,57 @@
+import { beforeEach, describe, it as test } from "jsr:@std/testing/bdd";
+import { expect } from "jsr:@std/expect";
+import { DiagramPrinter } from "../src/diagram_printer.ts";
+import { PagesBuilder } from "../src/reporting.ts";
+import { FakeFlowchartReportItems } from "./fakes.ts";
+import { DiagramPhysicalPrinter } from "../src/physical_printer.ts";
+import { PrinterDriverFactory } from "../src/printing.ts";
+
+describe("DiagramPrinter", () => {
+  let printer: DiagramPrinter;
+
+  beforeEach(() => {
+    printer = new DiagramPrinter();
+  });
+
+  test("translating empty document fails", () => {
+    const [result, _] = printer.printSummary(null, "swedish");
+    expect(result).toBe(false);
+  });
+
+  test("printing empty document fails", async () => {
+    const result = await printer.printDiagram(null, "", "");
+    expect(result).toBe(false);
+  });
+
+  test("print report with empty document fails", () => {
+    const template = "Report for FlowchartDiagram %s %s %s";
+    const fakeReportItems = new FakeFlowchartReportItems(
+      "DiagramName",
+      "Serial Number",
+      "Filename",
+    );
+    const result = printer.printReport(null, template, "", "", false);
+    expect(result).toBe(false);
+  });
+
+  test("print pages with empty document fails", () => {
+    const result = printer.printPages(null, new PagesBuilder());
+    expect(result).toBe(false);
+  });
+
+  test("validateReport succeeds with matching template", () => {
+    const template = "Report for FlowchartDiagram %s %s %s";
+    const fakeFlowchartReportItems = new FakeFlowchartReportItems(
+      "DiagramName",
+      "Serial Number",
+      "Filename",
+    );
+
+    const result = printer["validateReport"](
+      template,
+      fakeFlowchartReportItems,
+    );
+
+    expect(result).toBe(true);
+  });
+});
