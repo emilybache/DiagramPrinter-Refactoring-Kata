@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Checklists", "Checklists", 
 	ProjectSection(SolutionItems) = preProject
 		Checklists\discover_interface.md = Checklists\discover_interface.md
 		Checklists\extract_interface.md = Checklists\extract_interface.md
+		Checklists\adapt_parameter.md = Checklists\adapt_parameter.md
 	EndProjectSection
 EndProject
 Global
