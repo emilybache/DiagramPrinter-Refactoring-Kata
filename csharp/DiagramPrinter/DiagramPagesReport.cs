@@ -2,7 +2,7 @@ namespace DiagramPrinter;
 
 public class DiagramPagesReport
 {
-    private List<DiagramReportPage> pages;
+    private List<DiagramReportPage> pages = new List<DiagramReportPage>();
 
     public void AddPage(DiagramReportPage page)
     {
