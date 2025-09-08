@@ -4,6 +4,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiagramPrinter", "DiagramPr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiagramPrinterTests", "DiagramPrinterTests\DiagramPrinterTests.csproj", "{885F70C3-F495-4CBF-B8C8-71FB4235CA64}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Checklists", "Checklists", "{CAA556F9-6DC3-4B3E-82B7-5DA74E6453D4}"
+	ProjectSection(SolutionItems) = preProject
+		Checklists\discover_interface.md = Checklists\discover_interface.md
+		Checklists\extract_interface.md = Checklists\extract_interface.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
