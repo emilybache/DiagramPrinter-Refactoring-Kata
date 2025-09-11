@@ -2,6 +2,11 @@ using Microsoft.Extensions.Logging;
 
 namespace DiagramPrinter;
 
+public class FlowchartDiagramAdapter(FlowchartDiagram? diagram)
+{
+    public FlowchartDiagram? Diagram { get; } = diagram;
+}
+
 /**
  * This is a class you'd like to get under test so you can change it safely.
  */
@@ -11,28 +16,24 @@ public class DiagramPrinter
     public const string Pdf = "PDF";
 
     private readonly ILogger<DiagramPrinter> _logger = LoggingProvider.CreateLogger<DiagramPrinter>();
-
-    /*
-* Copy this checklist into the code and make a commit with message: [intention] - Adapt Parameter
-* 'Extract method' on whole body. Method name unimportant.
-* 'Transform parameters' & create adapter class
-* 'Inline variable' on the new variable assigned to Wrapper.Awkward
-* 'Rename' new method to overload original
-* Delete unnecessary comments and make a commit [completed] - Adapt Parameter
-       
-     */
+    
     public bool PrintSummary(FlowchartDiagram? diagram, string language, ref string summaryText)
     {
-        if (diagram == null)
+        return PrintSummary(new FlowchartDiagramAdapter(diagram), language, out summaryText);
+    }
+
+    public static bool PrintSummary(FlowchartDiagramAdapter flowchartDiagramAdapter, string language, out string summaryText)
+    {
+        if (flowchartDiagramAdapter.Diagram == null)
         {
             summaryText = "";
             return false;
         }
 
         var summary = new DiagramSummary(language);
-        summary.AddTitle(diagram.Name(), diagram.SerialNumber());
-        summary.AddHeader(diagram.SummaryInformation());
-        summary.AddImage(diagram.FlowchartThumbnail());
+        summary.AddTitle(flowchartDiagramAdapter.Diagram.Name(), flowchartDiagramAdapter.Diagram.SerialNumber());
+        summary.AddHeader(flowchartDiagramAdapter.Diagram.SummaryInformation());
+        summary.AddImage(flowchartDiagramAdapter.Diagram.FlowchartThumbnail());
         summaryText = summary.Export();
         return true;
     }
