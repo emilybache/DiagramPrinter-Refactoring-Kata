@@ -22,6 +22,11 @@ public class DiagramPrinter
         return PrintSummary(new FlowchartDiagramAdapter(diagram), language, out summaryText);
     }
 
+    /*
+* Copy this checklist into the code and make a commit with message: [intention] - Discover Adapter Interface
+* Identify every call to 'wrapper.Awkward'. Go through each one and decide which checklist to use. Either 'Discover Adapter Method' or 'Propagate Adapter'. Add the relevant checklist as a comment.
+* Follow the new checklists for each call to 'wrapper.Awkward'. 
+     */
     public static bool PrintSummary(FlowchartDiagramAdapter flowchartDiagramAdapter, string language, out string summaryText)
     {
         if (flowchartDiagramAdapter.Diagram == null)
