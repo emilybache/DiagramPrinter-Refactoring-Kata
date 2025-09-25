@@ -3,4 +3,4 @@ Added metadata to print queue
 Start Document
 DiagramPrintDriver is printing to physical printer
 End Document
-Print to File (Filename=[temp filename], folderValid=false)
+Print to File (Filename=[temp filename], Output folder=random output filename)

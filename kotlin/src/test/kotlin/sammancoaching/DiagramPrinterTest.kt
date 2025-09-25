@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.io.IOException
 import java.net.URI
+import java.nio.file.InvalidPathException
+import java.nio.file.Paths
 
 class DiagramPrinterTest {
     @Test
@@ -38,7 +40,7 @@ class DiagramPrinterTest {
 
         Assertions.assertTrue(result)
         Assertions.assertEquals(
-            "Print to File (Filename=filename, folderValid=true)",
+            "Print to File (Filename=filename, Output folder=temp/output.pdf)",
             spy.toString().trim { it <= ' ' })
     }
 
@@ -48,12 +50,11 @@ class DiagramPrinterTest {
         val spy = StringBuilder()
         val printer = DiagramPrinter()
         val diagram = SpyPrintableDiagram(spy, "filename", DiagramPrinter.SPREADSHEET, true)
-
         val result = printer.printDiagram(diagram, "temp", "output.xls")
 
         Assertions.assertTrue(result)
         Assertions.assertEquals(
-            "Print to File (Filename=filename, folderValid=true)",
+            "Print to File (Filename=filename, Output folder=temp/output.xls)",
             spy.toString().trim { it <= ' ' })
     }
 
@@ -75,7 +76,9 @@ class DiagramPrinterTest {
         val result = printer.doPrint(diagramWrapper, info, filename)
 
         Assertions.assertTrue(result)
-        Approvals.verify(spy, Options(RegExScrubber("filename(\\d+).Physical", "[temp filename]")))
+        Approvals.verify(spy,
+            Options(RegExScrubber("filename(\\d+).Physical", "[temp filename]"))
+        )
     }
 
     @Test
@@ -148,11 +151,10 @@ internal class SpyPrintableDiagram (
     }
 
     override fun printToFile(fromFilename: String, targetFilename: String): Boolean {
-        val folderOk = isWellFormedUriString(targetFilename)
         spy.append(
             String.format(
-                "Print to File (Filename=%s, folderValid=%b)\n",
-                fromFilename, folderOk
+                "Print to File (Filename=%s, Output folder=%s)\n",
+                fromFilename, targetFilename
             )
         )
         return true
