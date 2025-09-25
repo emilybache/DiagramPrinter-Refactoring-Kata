@@ -30,29 +30,24 @@ class DiagramPrinter {
             return false
         }
 
-        val printableDiagram = PrintableDiagram(diagram)
-        return printDiagram(printableDiagram, folder, filename)
-    }
-
-    @Throws(IOException::class)
-    fun printDiagram(printableDiagram: PrintableDiagram, folder: String?, filename: String?): Boolean {
-        val info = printableDiagram.getDiagramMetadata()
-        if (PDF == info.fileType) {
+        val info = DiagramMetadata(diagram)
+        if (PDF.equals(info.fileType)) {
             val targetFilename = getTargetFilename(folder, filename)
-            return printableDiagram.printToFile(info.fullFilename, targetFilename)
+            return diagram.flowchartAsPdf.copyFile(info.fullFilename, targetFilename, true)
         }
 
-        if (SPREADSHEET == info.fileType) {
+        if (SPREADSHEET.equals(info.fileType)) {
             var targetFilename = getTargetFilename(folder, filename)
             if (!targetFilename.endsWith(".xls")) {
                 targetFilename += ".xls"
             }
-            return printableDiagram.printSpreadsheetToFile(info.fullFilename, targetFilename)
+            return diagram.flowchartDataAsSpreadsheet.copyFile(info.fullFilename, targetFilename, true)
         }
 
         // Default case - print to a physical printer
-        return DiagramPhysicalPrinter().doPrint(printableDiagram, info, getTargetFilename(folder, filename))
+        return DiagramPhysicalPrinter().doPrint(diagram, info, getTargetFilename(folder, filename))
     }
+
 
     fun printReport(
         diagram: FlowchartDiagram?, reportTemplate: String, folder: String?,

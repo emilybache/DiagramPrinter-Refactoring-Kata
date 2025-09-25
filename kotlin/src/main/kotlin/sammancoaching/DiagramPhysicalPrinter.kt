@@ -1,5 +1,6 @@
 package sammancoaching
 
+import java.io.File
 import java.io.IOException
 import java.util.concurrent.locks.ReentrantLock
 import java.util.logging.Logger
@@ -23,10 +24,10 @@ class DiagramPhysicalPrinter {
     }
 
     @Throws(IOException::class)
-    fun doPrint(diagram: PrintableDiagram, info: DiagramMetadata, targetFilename: String): Boolean {
+    fun doPrint(diagram: FlowchartDiagram, info: DiagramMetadata, targetFilename: String): Boolean {
         val factory = PrinterDriverFactory.getInstance()
         val printerDriver = factory.createDriverForPrint()
-        diagram.getDiagram()?.let { printerDriver.setDiagram(it) }
+        printerDriver.setDiagram(diagram)
 
         val data = PrintMetadata(info.fileType)
         var success = false
@@ -34,11 +35,11 @@ class DiagramPhysicalPrinter {
         try {
             mutex.lock()
 
-            if (!physicalPrinter.isAvailable || !(physicalPrinter.getTonerLevelPercentage(Toner.Black) > 0
+            if (!physicalPrinter.isAvailable
+                || !(physicalPrinter.getTonerLevelPercentage(Toner.Black) > 0
                         && physicalPrinter.getTonerLevelPercentage(Toner.Cyan) > 0
                         && physicalPrinter.getTonerLevelPercentage(Toner.Magenta) > 0
-                        && physicalPrinter.getTonerLevelPercentage(Toner.Yellow) > 0
-                        )
+                        && physicalPrinter.getTonerLevelPercentage(Toner.Yellow) > 0)
             ) {
                 logger.info("Physical Printer Unavailable")
             } else if (physicalPrinter.getJobCount() < 0) {
@@ -46,7 +47,7 @@ class DiagramPhysicalPrinter {
             } else {
                 // Print the diagram using the Physical Printer
                 printQueue.add(data)
-                val summaryInformation = diagram.getSummaryInformation()
+                val summaryInformation = diagram.summaryInformation
                 logger.info("Diagram Summary Information: " + summaryInformation)
                 val isSummary = summaryInformation.length > 10
 
@@ -62,10 +63,10 @@ class DiagramPhysicalPrinter {
 
             if (success) {
                 // Save a backup of the printed document as PDF
-                val file = data.getFile()
+                val file = File(data.getFilename())
                 if (file.exists()) {
                     logger.info("Saving backup of printed document as PDF to file " + targetFilename)
-                    diagram.printToFile(data.getFilename(), targetFilename)
+                    diagram.flowchartAsPdf.copyFile(data.getFilename(), targetFilename, true)
                 }
             }
         } catch (e: Exception) {
